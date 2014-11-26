@@ -5,7 +5,7 @@
   "author": "Allan Marques Baptista <allan.marques@ymail.com>",
   "contributors": [],
   "scripts": {},
-  "main": "server.js",
+  "main": "app.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/m4n3z40/nextgen-stater-project"
@@ -24,8 +24,10 @@
     "structure"
   ],
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.10.4",
+    "react": "^0.12.1"
+  },
   "devDependencies": {},
-  "analyze": true,
   "license": "MIT"
 }
