@@ -1,0 +1,31 @@
+{
+  "name": "nextgen-stater-project",
+  "version": "0.0.0",
+  "description": "A stater kit for Apps prepared for the future.",
+  "author": "Allan Marques Baptista <allan.marques@ymail.com>",
+  "contributors": [],
+  "scripts": {},
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m4n3z40/nextgen-stater-project"
+  },
+  "bugs": {
+    "url": "https://github.com/m4n3z40/nextgen-stater-project/issues"
+  },
+  "keywords": [
+    "ES6",
+    "React",
+    "Flux",
+    "Isomorphic",
+    "starter",
+    "kit",
+    "harmony",
+    "structure"
+  ],
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {},
+  "analyze": true,
+  "license": "MIT"
+}
