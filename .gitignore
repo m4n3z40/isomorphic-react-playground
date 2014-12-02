@@ -17,3 +17,6 @@ node_modules
 
 # IDEA IDE Config
 .idea/
+
+# Diretório temporário de build
+temp/
