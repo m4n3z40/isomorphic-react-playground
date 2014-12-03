@@ -73,15 +73,11 @@ gulp.task('build:dev',['clientjs:dev', 'styles:dev']);
 gulp.task('build:prod', ['clientjs:prod', 'styles:prod']);
 
 /**
- * If server has started
- * @type {boolean}
- */
-var serverStarted = false;
-
-/**
  * Starts the server and monitor for any change, reloading the server and browser if any changes occur.
  */
 gulp.task('serve:dev', ['build:dev'], function(done) {
+	var serverStarted = false;
+
 	livereload.listen();
 
 	nodemon({

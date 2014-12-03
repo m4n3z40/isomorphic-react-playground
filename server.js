@@ -1,5 +1,10 @@
+require('node-jsx').install({extension: '.jsx'});
+
 var express = require('express');
 var app = require('./app');
+var React = require('react');
+
+var HelloWorld = require('./components/HelloWorld.jsx');
 
 var serverConfig = app.config('server');
 
@@ -18,7 +23,7 @@ serverApp.get('/', function(req, res) {
     res.render('layouts/default', {
         language: 'pt',
         pageTitle: 'Page Title',
-        pageContent: 'Hello World!'
+        pageContent: React.renderToString(HelloWorld({world:'React'}))
     });
 });
 
