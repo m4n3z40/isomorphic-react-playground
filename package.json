@@ -5,8 +5,8 @@
   "author": "Allan Marques Baptista <allan.marques@ymail.com>",
   "contributors": [],
   "scripts": {
-    "tests": "gulp tests",
-    "server": "gulp"
+    "test": "gulp tests",
+    "start": "gulp"
   },
   "main": "app.js",
   "repository": {
