@@ -7,7 +7,20 @@ var Application = require('./lib/core/application');
 var app = new Application();
 
 module.exports = app;
-},{"./lib/core/application":5}],2:[function(require,module,exports){
+},{"./lib/core/application":6}],2:[function(require,module,exports){
+var _ = require('lodash');
+
+var defaults = {
+    siteTitle: 'React rocks!',
+    defaultLanguage: 'pt'
+};
+
+module.exports = {
+    development: _.assign({}, defaults),
+    testing: _.assign({}, defaults),
+    production: _.assign({}, defaults)
+};
+},{"lodash":10}],3:[function(require,module,exports){
 var _ = require('lodash');
 
 var defaults = {
@@ -41,7 +54,7 @@ module.exports = {
 	testing: _.assign({}, defaults),
 	production: _.assign({}, defaults)
 };
-},{"lodash":9}],3:[function(require,module,exports){
+},{"lodash":10}],4:[function(require,module,exports){
 (function (process){
 var _ = require('lodash');
 
@@ -65,18 +78,19 @@ module.exports = {
 	production: _.assign({}, defaults)
 };
 }).call(this,require("IrXUsu"))
-},{"IrXUsu":8,"lodash":9}],4:[function(require,module,exports){
+},{"IrXUsu":9,"lodash":10}],5:[function(require,module,exports){
 'use strict';
 
 var app = require('./app');
 
 //Expose the app instance.
 window.App = app;
-},{"./app":1}],5:[function(require,module,exports){
+},{"./app":1}],6:[function(require,module,exports){
 'use strict';
 
 var ConfigManager = require('./config-manager'),
     Container = require('./container'),
+    appConfig = require('../../configs/app'),
     pathsConfig = require('../../configs/paths'),
     serverConfig = require('../../configs/server');
 
@@ -100,7 +114,8 @@ Application.prototype = {
     globalConfigDependencies: function() {
         return [
             {name: 'paths', content: pathsConfig},
-            {name: 'server', content: serverConfig}
+            {name: 'server', content: serverConfig},
+            {name: 'app', content: appConfig}
         ];
     },
 
@@ -180,7 +195,7 @@ Application.prototype = {
 
 
 module.exports = Application;
-},{"../../configs/paths":2,"../../configs/server":3,"./config-manager":6,"./container":7}],6:[function(require,module,exports){
+},{"../../configs/app":2,"../../configs/paths":3,"../../configs/server":4,"./config-manager":7,"./container":8}],7:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -247,7 +262,7 @@ ConfigManager.prototype = {
 
 module.exports = ConfigManager;
 }).call(this,require("IrXUsu"))
-},{"IrXUsu":8,"lodash":9}],7:[function(require,module,exports){
+},{"IrXUsu":9,"lodash":10}],8:[function(require,module,exports){
 'use strict';
 
 var _ = require('lodash');
@@ -452,7 +467,7 @@ Container.prototype = {
 };
 
 module.exports = Container;
-},{"lodash":9}],8:[function(require,module,exports){
+},{"lodash":10}],9:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -517,7 +532,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -7306,4 +7321,4 @@ process.chdir = function (dir) {
 }.call(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[4])
+},{}]},{},[5])
