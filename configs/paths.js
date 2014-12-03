@@ -1,6 +1,9 @@
 var _ = require('lodash');
 
 var defaults = {
+	//The path blob of the test files
+	testsBlob: './tests/**/*-spec.js',
+
 	//The paths of source files that needs to be watched or compiled
 	source: {
 		//The entry style file

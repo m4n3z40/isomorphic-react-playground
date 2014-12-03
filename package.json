@@ -4,7 +4,10 @@
   "description": "A stater kit for Apps prepared for the future.",
   "author": "Allan Marques Baptista <allan.marques@ymail.com>",
   "contributors": [],
-  "scripts": {},
+  "scripts": {
+    "tests": "gulp tests",
+    "server": "gulp"
+  },
   "main": "app.js",
   "repository": {
     "type": "git",
@@ -14,7 +17,6 @@
     "url": "https://github.com/m4n3z40/nextgen-stater-project/issues"
   },
   "keywords": [
-    "ES6",
     "React",
     "Flux",
     "Isomorphic",
@@ -33,6 +35,7 @@
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-browserify": "^0.5.0",
+    "gulp-jasmine": "^1.0.1",
     "gulp-livereload": "^2.1.1",
     "gulp-nodemon": "^1.0.4",
     "gulp-open": "^0.3.1",

@@ -7,6 +7,7 @@ var env = process.env.NODE_ENV || 'development',
 	openWindow = require('gulp-open'),
 	uglify = require('gulp-uglify'),
 	rename = require('gulp-rename'),
+	jasmine = require('gulp-jasmine'),
 	paths = require('./configs/paths')[env],
 	serverConf = require('./configs/server')[env];
 
@@ -72,6 +73,12 @@ gulp.task('build:dev',['clientjs:dev', 'styles:dev']);
 gulp.task('build:prod', ['clientjs:prod', 'styles:prod']);
 
 /**
+ * If server has started
+ * @type {boolean}
+ */
+var serverStarted = false;
+
+/**
  * Starts the server and monitor for any change, reloading the server and browser if any changes occur.
  */
 gulp.task('serve:dev', ['build:dev'], function(done) {
@@ -82,11 +89,20 @@ gulp.task('serve:dev', ['build:dev'], function(done) {
 		ext: 'js jsx jade styl',
 		env: {'NODE_ENV': 'development', port: serverConf.port}
 	})
-	.on('start', done)
+	.on('start', function() {
+		if (!serverStarted) {
+			done();
+
+			serverStarted = true;
+		}
+	})
 	.on('change', ['build:dev'])
 	.on('restart', function() {
 		console.log('Server restarted.');
-		livereload.changed();
+
+		setTimeout(function() {
+			livereload.changed();
+		}, 100);
 	});
 });
 
@@ -111,6 +127,14 @@ gulp.task('serve:prod', ['build:prod'], function() {
 gulp.task('start:development', ['serve:dev'], function() {
 	return gulp.src(paths.source.clientMainScript)
 		.pipe(openWindow('', {url: serverConf.url}))
+});
+
+/**
+ * Run the tests in the test folder
+ */
+gulp.task('tests', function() {
+	return gulp.src(paths.testsBlob)
+		.pipe(jasmine());
 });
 
 /**
