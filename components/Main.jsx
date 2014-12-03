@@ -6,7 +6,8 @@ module.exports = React.createClass({
     getDefaultProps: function() {
         return {
             hello: 'Hello',
-            world: 'World'
+            world: 'World',
+            startTimer: false
         };
     },
 
@@ -14,6 +15,20 @@ module.exports = React.createClass({
         return {
             secondsElapsed: 0
         }
+    },
+
+    tick: function() {
+        this.setState({secondsElapsed: this.state.secondsElapsed + 1});
+    },
+
+    componentDidMount: function() {
+        if (this.props.startTimer) {
+            this.interval = setInterval(this.tick, 1000);
+        }
+    },
+
+    componentWillUnmount: function() {
+        clearInterval(this.interval);
     },
 
     render: function() {
