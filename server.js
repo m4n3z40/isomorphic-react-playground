@@ -21,14 +21,14 @@ serverApp.use('/assets', express.static('assets'));
 var appConfig = app.config('app');
 
 //Gets the component that will render the page content
-var Main = React.createFactory(require('./components/Main.jsx'));
+var Main = app.getMainComponent();
 
 //Sets the default route handler
 serverApp.get('/', function(req, res) {
     res.render('layouts/default', {
         language: appConfig.defaultLanguage,
         pageTitle: appConfig.siteTitle,
-        pageContent: React.renderToString(Main({world:'React'}))
+        mainComponent: React.renderToString(Main({world:'React'}))
     });
 });
 

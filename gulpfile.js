@@ -80,10 +80,12 @@ gulp.task('serve:dev', ['build:dev'], function(done) {
 
 	livereload.listen();
 
-	nodemon({
+	return nodemon({
+		verbose: true,
 		script: 'server.js',
 		ext: 'js jsx jade styl',
-		env: {'NODE_ENV': 'development', port: serverConf.port}
+		env: {'NODE_ENV': 'development', port: serverConf.port},
+		ignore: paths.unwatchedFiles
 	})
 	.on('start', function() {
 		if (!serverStarted) {
@@ -98,7 +100,7 @@ gulp.task('serve:dev', ['build:dev'], function(done) {
 
 		setTimeout(function() {
 			livereload.changed();
-		}, 100);
+		}, 150);
 	});
 });
 
@@ -109,7 +111,8 @@ gulp.task('serve:prod', ['build:prod'], function() {
 	nodemon({
 		script: 'server.js',
 		ext: 'js jsx jade styl',
-		env: {'NODE_ENV': 'production', port: serverConf.port}
+		env: {'NODE_ENV': 'production', port: serverConf.port},
+		ignore: paths.unwatchedFiles
 	})
 	.on('change', ['build:prod'])
 	.on('restart', function() {

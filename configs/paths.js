@@ -4,6 +4,13 @@ var defaults = {
 	//The path blob of the test files
 	testsBlob: './tests/**/*-spec.js',
 
+	unwatchedFiles: [
+		'assets/css/app.css',
+		'assets/js/app.js',
+		'.git/*',
+		'.idea/*'
+	],
+
 	//The paths of source files that needs to be watched or compiled
 	source: {
 		//The entry style file
