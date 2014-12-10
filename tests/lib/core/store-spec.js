@@ -24,8 +24,8 @@ describe('Store', function() {
                     'event2': 'handler2'
                 };
             },
-            handler1: function(payload) { return payload; },
-            handler2: function(payload) { return payload; }
+            handler1: function(){},
+            handler2: function(){}
         });
 
         spyOn(ChildStoreClass.prototype, 'handler1');
