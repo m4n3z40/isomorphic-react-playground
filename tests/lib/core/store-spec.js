@@ -45,33 +45,29 @@ describe('Store', function() {
         expect(myMediator).toBe(mediator);
     });
 
-    it('can emit, register and unregister actions events', function() {
-        var handler = jasmine.createSpy('handler', function() {
-                return arguments;
-            }).and.callThrough(),
-            payload = {foo: 'bar'};
+    it('can register change listeners and notify changes', function() {
+        var handler = jasmine.createSpy('handler', function(){}).and.callThrough();
 
-        store.on('action', handler);
+        store.registerListener(handler);
 
-        expect(mediator.register).toHaveBeenCalledWith('action', handler);
-        expect(mediator.hasHandlers('action')).toBe(true);
+        expect(store.hasListeners()).toBe(true);
 
-        store.emit('action', payload);
+        store.emitChanges();
 
-        expect(mediator.dispatch).toHaveBeenCalledWith('action', payload);
-        expect(handler.calls.count()).toBe(1);
-        expect(handler.calls.argsFor(0)[0]).toBe(payload);
+        expect(handler).toHaveBeenCalledWith(store);
 
-        store.off('action', handler);
+        store.emitChanges();
 
-        expect(mediator.unregister).toHaveBeenCalledWith('action', handler);
-        expect(mediator.hasHandlers('action')).toBe(false);
+        expect(handler).toHaveBeenCalledWith(store);
+        expect(handler.calls.count()).toBe(2);
+
+        store.removeListener(handler);
+
+        expect(store.hasListeners()).toBe(false);
     });
 
     it('can be extended and register children`s default handlers', function() {
-        var handler3 = jasmine.createSpy('handler3', function(payload) {
-                return payload;
-            }).and.callThrough(),
+        var handler3 = jasmine.createSpy('handler3', function(){}).and.callThrough(),
             childStore = new ChildStoreClass(mediator, {'event3': handler3}),
             payload = {'foo': 'bar'};
 
