@@ -1,5 +1,3 @@
-'use strict';
-
 var React = require('react'),
     Application = require('./lib/core/application'),
     TaskStore = require('./stores/tasks'),
@@ -9,6 +7,8 @@ var React = require('react'),
 var app = new Application();
 
 app.setMainComponent(React.createFactory(mainComponent));
+
+app.addService(require('./services/tasks'));
 
 app.addStore(new TaskStore());
 
