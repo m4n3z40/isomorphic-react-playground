@@ -28,7 +28,8 @@ serverApp.get('/', function(req, res) {
     res.render('layouts/default', {
         language: appConfig.defaultLanguage,
         pageTitle: appConfig.siteTitle,
-        mainComponent: React.renderToString(Main({app: app}))
+        mainComponent: React.renderToString(Main({app: app, tasks: app.getStore('TasksStore').getAll()})),
+        state: JSON.stringify(app.saveState())
     });
 });
 

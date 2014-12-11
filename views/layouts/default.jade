@@ -6,4 +6,6 @@ html(lang="#{language}")
    body
       #reactRoot!= mainComponent
 
+      script.
+         window.__serverState = !{state};
       script(src="assets/js/app.js")

@@ -7,7 +7,8 @@ module.exports = React.createClass({
     getDefaultProps: function() {
         return {
             app: null,
-            filters: []
+            tasks: [],
+            filters: null
         }
     },
 
