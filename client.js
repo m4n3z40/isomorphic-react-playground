@@ -4,7 +4,7 @@ var app = require('./app'),
     React = require('react');
 
 React.render(
-    app.getMainComponent()({world: 'React (from browser)', startTimer: true}),
+    app.getMainComponent()({app: app}),
     document.getElementById('reactRoot')
 );
 

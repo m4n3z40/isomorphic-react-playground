@@ -1,39 +1,24 @@
-var React = require('react');
+var React = require('react'),
+    TasksFilter = require('./TasksFilter.jsx'),
+    TasksList = require('./TasksList.jsx'),
+    TaskComposer = require('./TaskComposer.jsx');
 
 module.exports = React.createClass({
     getDefaultProps: function() {
         return {
-            hello: 'Hello',
-            world: 'World',
-            startTimer: false
-        };
-    },
-
-    getInitialState: function() {
-        return {
-            secondsElapsed: 0
+            app: null,
+            filters: []
         }
-    },
-
-    tick: function() {
-        this.setState({secondsElapsed: this.state.secondsElapsed + 1});
-    },
-
-    componentDidMount: function() {
-        if (this.props.startTimer) {
-            this.interval = setInterval(this.tick, 1000);
-        }
-    },
-
-    componentWillUnmount: function() {
-        clearInterval(this.interval);
     },
 
     render: function() {
+        var props = this.props;
+
         return (
             <div>
-                <h3>{this.props.hello} {this.props.world}</h3>
-                <p>You've been here for {this.state.secondsElapsed} seconds.</p>
+                <TasksFilter {...props} />
+                <TasksList {...props} />
+                <TaskComposer {...props} />
             </div>
         );
     }

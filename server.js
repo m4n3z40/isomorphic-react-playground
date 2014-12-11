@@ -28,7 +28,7 @@ serverApp.get('/', function(req, res) {
     res.render('layouts/default', {
         language: appConfig.defaultLanguage,
         pageTitle: appConfig.siteTitle,
-        mainComponent: React.renderToString(Main({world:'React'}))
+        mainComponent: React.renderToString(Main({app: app}))
     });
 });
 

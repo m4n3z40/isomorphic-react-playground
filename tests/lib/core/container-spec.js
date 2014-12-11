@@ -89,6 +89,16 @@ describe('Container', function() {
         expect(factory.calls.count()).toBe(2);
     });
 
+    it('can remove values', function() {
+        container.registerValue('foo', 'bar');
+
+        expect(container.get('foo')).toBe('bar');
+
+        container.remove('foo');
+
+        expect(container.get('foo')).toBeNull();
+    });
+
     it('can inject dependencies in a function using a helper method', function() {
         container.registerValue('foo', 'foo');
         container.registerValue('bar', 'bar');
