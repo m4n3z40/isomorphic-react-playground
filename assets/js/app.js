@@ -229,7 +229,7 @@ module.exports = React.createClass({displayName: 'exports',
 var _ = require('lodash');
 
 var defaults = {
-    siteTitle: 'React rocks!',
+    siteTitle: 'Taskinator',
     defaultLanguage: 'pt'
 };
 
@@ -26564,7 +26564,6 @@ module.exports = Store.extend({
 
     initialize: function() {
         this.tasks = [];
-        this.filteredTasks = [];
     },
 
     createTask: function(task) {
@@ -26578,10 +26577,6 @@ module.exports = Store.extend({
 
     getAll: function() {
         return this.tasks;
-    },
-
-    getAllFiltered: function() {
-        return this.filteredTasks;
     },
 
     saveState: function() {

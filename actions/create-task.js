@@ -1,9 +1,11 @@
 var TasksContants = require('../constants/tasks');
 
 module.exports = function(app, payload, callback) {
-    app.emit(TasksContants.CREATE_START, payload);
+    var task = app.getStore('TasksStore').createTask(payload);
 
-    app.getService('TasksService').create(payload, function(error, created) {
+    app.emit(TasksContants.CREATE_START, task);
+
+    app.getService('TasksService').create(task, function(error, created) {
         if (error) {
             app.emit(TasksContants.CREATE_ERROR, error);
             return callback && callback(error);

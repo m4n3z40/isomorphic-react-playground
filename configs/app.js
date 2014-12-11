@@ -1,7 +1,7 @@
 var _ = require('lodash');
 
 var defaults = {
-    siteTitle: 'React rocks!',
+    siteTitle: 'Taskinator',
     defaultLanguage: 'pt'
 };
 

@@ -1,5 +1,7 @@
-var Store = require('../lib/core/store'),
-    TasksContants = require('../constants/tasks');
+var _ = require('lodash'),
+    Store = require('../lib/core/store'),
+    TasksContants = require('../constants/tasks'),
+    savedTask;
 
 module.exports = Store.extend({
     name: 'TasksStore',
@@ -21,7 +23,6 @@ module.exports = Store.extend({
 
     initialize: function() {
         this.tasks = [];
-        this.filteredTasks = [];
     },
 
     createTask: function(task) {
@@ -37,10 +38,6 @@ module.exports = Store.extend({
         return this.tasks;
     },
 
-    getAllFiltered: function() {
-        return this.filteredTasks;
-    },
-
     saveState: function() {
         return {
             tasks: this.tasks
@@ -51,35 +48,81 @@ module.exports = Store.extend({
         this.tasks = state;
     },
 
-    _onRetrieveSuccess: function(payload) {
+    _onRetrieveSuccess: function(tasks) {
+        this.tasks = tasks;
 
+        this.emitChanges();
     },
 
-    _onCreateStart: function(payload) {
+    _onCreateStart: function(task) {
+        this.tasks.push(task);
 
+        this.emitChanges();
     },
 
-    _onCreateError: function(payload) {
+    _onCreateError: function(error) {
+        this.tasks.splice(this.tasks.length - 1, 1);
 
+        this.emitChanges();
     },
 
-    _onUpdateStart: function(payload) {
+    _onUpdateStart: function(task) {
+        var oldTask = _.first(this.tasks, {id: task.id});
 
+        if (oldTask) {
+            savedTask = _.clone(oldTask);
+
+            oldTask.completed = task.completed;
+            oldTask.text = task.text;
+
+            this.emitChanges();
+        }
     },
 
-    _onUpdateError: function(payload) {
+    _onUpdateError: function(error) {
+        var newTask = _.first(this.tasks, {id: savedTask.id});
 
+        if (newTask) {
+            newTask.completed = savedTask.completed;
+            newTask.text = savedTask.text;
+
+            savedTask = null;
+
+            this.emitChanges();
+        }
     },
 
-    _onDestroyStart: function(payload) {
+    _onDestroyStart: function(task) {
+        _.remove(this.tasks, {id: task.id});
 
+        savedTask = task;
+
+        this.emitChanges();
     },
 
-    _onDestroyError: function(payload) {
+    _onDestroyError: function(error) {
+        this.tasks.push(savedTask);
 
+        savedTask = null;
+
+        this.emitChanges();
     },
 
-    _onFilter: function(payload) {
+    _onFilter: function(filter) {
+        var tasks = this.tasks;
 
+        if (filter.byCompleted) {
+            tasks = _.filter(this.tasks, 'completed');
+        }
+
+        if (filter.byText) {
+            tasks = _.filter(this.tasks, function(task) {
+                new RegExp(filter.byText).test(task.text);
+            });
+        }
+
+        this.tasks = tasks;
+
+        this.emitChanges();
     }
 });
