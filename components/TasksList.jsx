@@ -28,7 +28,7 @@ module.exports = React.createClass({
         return (
             <ul>
                 {_.map(tasks, function(task) {
-                    return <TaskItem description={task.description} completed={task.completed} editing={task.editing} />
+                    return <TaskItem key={task.id} text={task.text} completed={task.completed} editing={task.editing} />
                 })}
             </ul>
         );

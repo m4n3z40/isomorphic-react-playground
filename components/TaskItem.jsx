@@ -3,30 +3,32 @@ var React = require('react');
 module.exports = React.createClass({
     getDefaultProps: function() {
         return {
-            done: false,
-            description: ''
+            completed: false,
+            text: ''
         }
     },
 
     render: function() {
         var props = this.props,
             completed = props.completed,
-            description = props.description,
+            text = props.text,
             taskContent,
             button;
 
         if (props.editing) {
-            taskContent = <input type="text" value={description} />;
-            button = <button>Save</button>
+            taskContent = <input type="text" value={text} />;
+            button = <button>Save</button>;
         } else {
-            taskContent = description;
+            taskContent = text;
             button = <button>Edit</button>;
         }
 
         return (
-            <li class={completed ? 'done' : 'pending'}>
-                <input type="radio" checked={completed} />
-                {taskContent}
+            <li className={completed ? 'done' : 'pending'}>
+                <label>
+                    <input type="checkbox" name="completed" />
+                    {taskContent}
+                </label>
                 {button}
             </li>
         );

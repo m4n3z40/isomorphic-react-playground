@@ -1,10 +1,12 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var TasksContants = require('../constants/tasks');
 
-module.exports = function(app, payload, callback) {
-    app.emit(TasksContants.CREATE_START, payload);
+function createTask(app, payload, callback) {
+    var task = app.getStore('TasksStore').createTask(payload);
 
-    app.getService('TasksService').create(payload, function(error, created) {
+    app.emit(TasksContants.CREATE_START, task);
+
+    app.getService('TasksService').create(task, function(error, created) {
         if (error) {
             app.emit(TasksContants.CREATE_ERROR, error);
             return callback && callback(error);
@@ -13,21 +15,21 @@ module.exports = function(app, payload, callback) {
         app.emit(TasksContants.CREATE_SUCCESS, created);
         callback && callback(null, created);
     });
-};
+}
 
-module.exports.name = 'create-task';
+module.exports = createTask;
 },{"../constants/tasks":15}],2:[function(require,module,exports){
 var TasksContants = require('../constants/tasks');
 
-module.exports = function(app, payload, callback) {
+function filterTasks(app, payload, callback) {
     app.emit(TasksContants.FILTER, payload);
-};
+}
 
-module.exports.name = 'filter-tasks';
+module.exports = filterTasks;
 },{"../constants/tasks":15}],3:[function(require,module,exports){
 var TasksContants = require('../constants/tasks');
 
-module.exports = function(app, payload, callback) {
+function removeTask(app, payload, callback) {
     app.emit(TasksContants.DESTROY_START, payload);
 
     app.getService('TasksService').remove(payload, function(error, removed) {
@@ -39,13 +41,13 @@ module.exports = function(app, payload, callback) {
         app.emit(TasksContants.DESTROY_SUCCESS, removed);
         callback && callback(null, removed);
     });
-};
+}
 
-module.exports.name = 'remove-task';
+module.exports = removeTask;
 },{"../constants/tasks":15}],4:[function(require,module,exports){
 var TasksContants = require('../constants/tasks');
 
-module.exports = function(app, payload, callback) {
+function showTasks(app, payload, callback) {
     app.emit(TasksContants.RETRIEVE_START, payload);
 
     app.getService('TasksService').read(null, function(error, tasks) {
@@ -57,13 +59,13 @@ module.exports = function(app, payload, callback) {
         app.emit(TasksContants.RETRIEVE_SUCCESS, tasks);
         callback && callback(null, tasks);
     });
-};
+}
 
-module.exports.name = 'show-tasks';
+module.exports = showTasks;
 },{"../constants/tasks":15}],5:[function(require,module,exports){
 var TasksContants = require('../constants/tasks');
 
-module.exports = function(app, payload, callback) {
+function updateTask(app, payload, callback) {
     app.emit(TasksContants.UPDATE_START, payload);
 
     app.getService('TasksService').update(payload, function(error, updated) {
@@ -75,9 +77,9 @@ module.exports = function(app, payload, callback) {
         app.emit(TasksContants.UPDATE_SUCCESS, updated);
         callback && callback(null, updated);
     });
-};
+}
 
-module.exports.name = 'update-task';
+module.exports = updateTask;
 },{"../constants/tasks":15}],6:[function(require,module,exports){
 var React = require('react'),
     Application = require('./lib/core/application'),
@@ -93,14 +95,14 @@ app.addService(require('./services/tasks'));
 
 app.addStore(new TaskStore());
 
-app.addAction(require('./actions/create-task'));
-app.addAction(require('./actions/remove-task'));
-app.addAction(require('./actions/update-task'));
-app.addAction(require('./actions/show-tasks'));
-app.addAction(require('./actions/filter-tasks'));
+app.addAction(require('./actions/createTask'));
+app.addAction(require('./actions/removeTask'));
+app.addAction(require('./actions/updateTask'));
+app.addAction(require('./actions/showTasks'));
+app.addAction(require('./actions/filterTasks'));
 
 module.exports = app;
-},{"./actions/create-task":1,"./actions/filter-tasks":2,"./actions/remove-task":3,"./actions/show-tasks":4,"./actions/update-task":5,"./components/Main.jsx":7,"./lib/core/application":17,"./services/tasks":172,"./stores/tasks":173,"react":171}],7:[function(require,module,exports){
+},{"./actions/createTask":1,"./actions/filterTasks":2,"./actions/removeTask":3,"./actions/showTasks":4,"./actions/updateTask":5,"./components/Main.jsx":7,"./lib/core/application":17,"./services/tasks":172,"./stores/tasks":173,"react":171}],7:[function(require,module,exports){
 var React = require('react'),
     TasksFilter = require('./TasksFilter.jsx'),
     TasksList = require('./TasksList.jsx'),
@@ -115,6 +117,10 @@ module.exports = React.createClass({displayName: 'exports',
         }
     },
 
+    onAddTask: function(task) {
+        this.props.app.executeAction('createTask', task);
+    },
+
     render: function() {
         var props = this.props;
 
@@ -122,7 +128,7 @@ module.exports = React.createClass({displayName: 'exports',
             React.createElement("div", null, 
                 React.createElement(TasksFilter, React.__spread({},  props)), 
                 React.createElement(TasksList, React.__spread({},  props)), 
-                React.createElement(TaskComposer, React.__spread({},  props))
+                React.createElement(TaskComposer, React.__spread({},  props, {onAddTask: this.onAddTask}))
             )
         );
     }
@@ -131,11 +137,27 @@ module.exports = React.createClass({displayName: 'exports',
 var React = require('react');
 
 module.exports = React.createClass({displayName: 'exports',
+    getInitialState: function() {
+        return {value: ''};
+    },
+
+    onTextChange: function(e) {
+        this.setState({value: e.target.value});
+    },
+
+    onAddTask: function() {
+        if (this.props.onAddTask) {
+            this.props.onAddTask(this.state.value);
+
+            this.setState({value: ''});
+        }
+    },
+
     render: function() {
         return (
             React.createElement("footer", null, 
-                React.createElement("textarea", {placeholder: "Describe a task here"}), 
-                React.createElement("button", null, "Add task")
+                React.createElement("textarea", {onChange: this.onTextChange, placeholder: "Describe a task here", value: this.state.value}), 
+                React.createElement("button", {onClick: this.onAddTask}, "Add task")
             )
         );
     }
@@ -146,30 +168,32 @@ var React = require('react');
 module.exports = React.createClass({displayName: 'exports',
     getDefaultProps: function() {
         return {
-            done: false,
-            description: ''
+            completed: false,
+            text: ''
         }
     },
 
     render: function() {
         var props = this.props,
             completed = props.completed,
-            description = props.description,
+            text = props.text,
             taskContent,
             button;
 
         if (props.editing) {
-            taskContent = React.createElement("input", {type: "text", value: description});
-            button = React.createElement("button", null, "Save")
+            taskContent = React.createElement("input", {type: "text", value: text});
+            button = React.createElement("button", null, "Save");
         } else {
-            taskContent = description;
+            taskContent = text;
             button = React.createElement("button", null, "Edit");
         }
 
         return (
-            React.createElement("li", {class: completed ? 'done' : 'pending'}, 
-                React.createElement("input", {type: "radio", checked: completed}), 
-                taskContent, 
+            React.createElement("li", {className: completed ? 'done' : 'pending'}, 
+                React.createElement("label", null, 
+                    React.createElement("input", {type: "checkbox", name: "completed"}), 
+                    taskContent
+                ), 
                 button
             )
         );
@@ -219,7 +243,7 @@ module.exports = React.createClass({displayName: 'exports',
         return (
             React.createElement("ul", null, 
                 _.map(tasks, function(task) {
-                    return React.createElement(TaskItem, {description: task.description, completed: task.completed, editing: task.editing})
+                    return React.createElement(TaskItem, {key: task.id, text: task.text, completed: task.completed, editing: task.editing})
                 })
             )
         );
@@ -505,7 +529,7 @@ module.exports = Class.extend({
      * @param {string} name
      * @return {Object}
      */
-    getSevice: function(name) {
+    getService: function(name) {
         return this.get(SERVICES_PREFIX + name);
     },
 
@@ -1296,7 +1320,7 @@ module.exports = Store = Class.extend({
             mediator = me._mediator;
 
         _.forOwn(me._handlers, function(handler, actionName) {
-            mediator.register(actionName, _.isFunction(handler) ? handler : me[handler]);
+            mediator.register(actionName, _.isFunction(handler) ? handler : _.bind(me[handler], me));
         });
     },
 
@@ -1311,7 +1335,7 @@ module.exports = Store = Class.extend({
             mediator = me._mediator;
 
         _.forOwn(me._handlers, function(handler, actionName) {
-            mediator.unregister(actionName, _.isFunction(handler) ? handler : me[handler]);
+            mediator.unregister(actionName, _.isFunction(handler) ? handler : _.bind(me[handler], me));
         });
     }
 });
@@ -26541,8 +26565,10 @@ module.exports = {
     }
 };
 },{"lodash":25}],173:[function(require,module,exports){
-var Store = require('../lib/core/store'),
-    TasksContants = require('../constants/tasks');
+var _ = require('lodash'),
+    Store = require('../lib/core/store'),
+    TasksContants = require('../constants/tasks'),
+    savedTask;
 
 module.exports = Store.extend({
     name: 'TasksStore',
@@ -26586,39 +26612,85 @@ module.exports = Store.extend({
     },
 
     restoreState: function(state) {
-        this.tasks = state;
+        this.tasks = state.tasks;
     },
 
-    _onRetrieveSuccess: function(payload) {
+    _onRetrieveSuccess: function(tasks) {
+        this.tasks = tasks;
 
+        this.emitChanges();
     },
 
-    _onCreateStart: function(payload) {
+    _onCreateStart: function(task) {
+        this.tasks.push(task);
 
+        this.emitChanges();
     },
 
-    _onCreateError: function(payload) {
+    _onCreateError: function(error) {
+        this.tasks.pop();
 
+        this.emitChanges();
     },
 
-    _onUpdateStart: function(payload) {
+    _onUpdateStart: function(task) {
+        var oldTask = _.first(this.tasks, {id: task.id});
 
+        if (oldTask) {
+            savedTask = _.clone(oldTask);
+
+            oldTask.completed = task.completed;
+            oldTask.text = task.text;
+
+            this.emitChanges();
+        }
     },
 
-    _onUpdateError: function(payload) {
+    _onUpdateError: function(error) {
+        var newTask = _.first(this.tasks, {id: savedTask.id});
 
+        if (newTask) {
+            newTask.completed = savedTask.completed;
+            newTask.text = savedTask.text;
+
+            savedTask = null;
+
+            this.emitChanges();
+        }
     },
 
-    _onDestroyStart: function(payload) {
+    _onDestroyStart: function(task) {
+        _.remove(this.tasks, {id: task.id});
 
+        savedTask = task;
+
+        this.emitChanges();
     },
 
-    _onDestroyError: function(payload) {
+    _onDestroyError: function(error) {
+        this.tasks.push(savedTask);
 
+        savedTask = null;
+
+        this.emitChanges();
     },
 
-    _onFilter: function(payload) {
+    _onFilter: function(filter) {
+        var tasks = this.tasks;
 
+        if (filter.byCompleted) {
+            tasks = _.filter(this.tasks, 'completed');
+        }
+
+        if (filter.byText) {
+            tasks = _.filter(this.tasks, function(task) {
+                new RegExp(filter.byText).test(task.text);
+            });
+        }
+
+        this.tasks = tasks;
+
+        this.emitChanges();
     }
 });
-},{"../constants/tasks":15,"../lib/core/store":22}]},{},[16])
+},{"../constants/tasks":15,"../lib/core/store":22,"lodash":25}]},{},[16])

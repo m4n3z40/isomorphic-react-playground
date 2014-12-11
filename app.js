@@ -12,10 +12,10 @@ app.addService(require('./services/tasks'));
 
 app.addStore(new TaskStore());
 
-app.addAction(require('./actions/create-task'));
-app.addAction(require('./actions/remove-task'));
-app.addAction(require('./actions/update-task'));
-app.addAction(require('./actions/show-tasks'));
-app.addAction(require('./actions/filter-tasks'));
+app.addAction(require('./actions/createTask'));
+app.addAction(require('./actions/removeTask'));
+app.addAction(require('./actions/updateTask'));
+app.addAction(require('./actions/showTasks'));
+app.addAction(require('./actions/filterTasks'));
 
 module.exports = app;

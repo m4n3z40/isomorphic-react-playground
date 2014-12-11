@@ -1,6 +1,6 @@
 var TasksContants = require('../constants/tasks');
 
-module.exports = function(app, payload, callback) {
+function updateTask(app, payload, callback) {
     app.emit(TasksContants.UPDATE_START, payload);
 
     app.getService('TasksService').update(payload, function(error, updated) {
@@ -12,6 +12,6 @@ module.exports = function(app, payload, callback) {
         app.emit(TasksContants.UPDATE_SUCCESS, updated);
         callback && callback(null, updated);
     });
-};
+}
 
-module.exports.name = 'update-task';
+module.exports = updateTask;

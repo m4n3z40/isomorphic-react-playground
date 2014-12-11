@@ -45,7 +45,7 @@ module.exports = Store.extend({
     },
 
     restoreState: function(state) {
-        this.tasks = state;
+        this.tasks = state.tasks;
     },
 
     _onRetrieveSuccess: function(tasks) {
@@ -61,7 +61,7 @@ module.exports = Store.extend({
     },
 
     _onCreateError: function(error) {
-        this.tasks.splice(this.tasks.length - 1, 1);
+        this.tasks.pop();
 
         this.emitChanges();
     },

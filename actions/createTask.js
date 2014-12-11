@@ -1,6 +1,6 @@
 var TasksContants = require('../constants/tasks');
 
-module.exports = function(app, payload, callback) {
+function createTask(app, payload, callback) {
     var task = app.getStore('TasksStore').createTask(payload);
 
     app.emit(TasksContants.CREATE_START, task);
@@ -14,6 +14,6 @@ module.exports = function(app, payload, callback) {
         app.emit(TasksContants.CREATE_SUCCESS, created);
         callback && callback(null, created);
     });
-};
+}
 
-module.exports.name = 'create-task';
+module.exports = createTask;
