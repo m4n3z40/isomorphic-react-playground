@@ -11,17 +11,17 @@ module.exports = React.createClass({
         return {value: ''};
     },
 
-    onKeyDown: function(e) {
+    handleKeyDown: function(e) {
         if (e.keyCode === SPACE_KEY) {
-            this.onAddTask();
+            this.createTask();
         }
     },
 
-    onTextChange: function(e) {
+    handleTextChange: function(e) {
         this.setState({value: e.target.value});
     },
 
-    onAddTask: function() {
+    createTask: function() {
         this.props.app.executeAction('createTask', this.state.value);
 
         this.setState({value: ''});
@@ -31,9 +31,9 @@ module.exports = React.createClass({
         return (
             <footer>
                 <input type="text" placeholder={this.props.placeholder} value={this.state.value}
-                    onChange={this.onTextChange}
-                    onKeyUp={this.onKeyDown} />
-                <button onClick={this.onAddTask}>Add task</button>
+                    onChange={this.handleTextChange}
+                    onKeyUp={this.handleKeyDown} />
+                <button onClick={this.createTask}>Add task</button>
             </footer>
         );
     }

@@ -1,5 +1,7 @@
 var React = require('react');
 
+var SPACE_KEY = 13;
+
 module.exports = React.createClass({
     getDefaultProps: function() {
         return {task: null};
@@ -11,36 +13,52 @@ module.exports = React.createClass({
         return {text: task.text, editing: task.editing};
     },
 
-    onRemoveClick: function() {
-        if (this.props.onRemoveClick) {
-            this.props.onRemoveClick(this.props.task);
+    removeTask: function() {
+        if (this.props.handleRemove) {
+            this.props.handleRemove(this.props.task);
         }
     },
 
-    onSaveClick: function() {
-        if(this.props.onSaveClick) {
+    saveTask: function() {
+        if(this.props.handleSave) {
             var task = this.props.task;
 
-            this.props.onSaveClick({
+            this.props.handleSave({
                 id: task.id,
                 text: this.state.text,
-                completed: task.completed,
                 editing: false
             });
         }
     },
 
-    onEditClick: function() {
+    compleTask: function() {
+        if(this.props.handleSave) {
+            var task = this.props.task;
+
+            this.props.handleSave({
+                id: task.id,
+                completed: !task.completed
+            });
+        }
+    },
+
+    editTask: function() {
         this.props.task.editing = true;
 
         this.setState({editing: true});
     },
 
-    onEditFieldChange: function(e) {
+    handleEditFieldChange: function(e) {
         this.setState({text: e.target.value});
     },
 
-    onCancelEditing: function() {
+    handleEditFieldKeyDown: function(e) {
+        if (e.keyCode === SPACE_KEY) {
+            this.saveTask();
+        }
+    },
+
+    handleCancelEditing: function() {
         var task = this.props.task;
 
         task.editing = false;
@@ -57,19 +75,20 @@ module.exports = React.createClass({
             taskContent;
 
         if (editing) {
-            taskContent = <input type="text" value={text} onChange={this.onEditFieldChange}  />;
-            buttons.push(<button key="cancel" onClick={this.onCancelEditing}>Cancel</button>);
-            buttons.push(<button key="save" onClick={this.onSaveClick}>Save</button>);
+            taskContent = <input type="text" value={text} onChange={this.handleEditFieldChange} onKeyDown={this.handleEditFieldKeyDown}  />;
+            buttons.push(<button key="cancel" onClick={this.handleCancelEditing}>Cancel</button>);
+            buttons.push(<button key="save" onClick={this.saveTask}>Save</button>);
         } else {
             taskContent = text;
-            buttons.push(<button key="remove" onClick={this.onRemoveClick}>Remove</button>);
-            buttons.push(<button key="edit" onClick={this.onEditClick}>Edit</button>);
+            buttons.push(<button key="remove" onClick={this.removeTask}>Remove</button>);
+            buttons.push(<button key="edit" onClick={this.editTask}>Edit</button>);
         }
 
         return (
             <li className={completed ? 'done' : 'pending'}>
                 <label>
-                    <input type="checkbox" name="completed" className={editing ? 'hidden' : ''} />
+                    <input type="checkbox" name="completed" className={editing ? 'hidden' : ''}
+                        onChange={this.compleTask} />
                     {taskContent}
                 </label>
                 {buttons}

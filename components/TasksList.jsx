@@ -20,11 +20,11 @@ module.exports = React.createClass({
         this.setState({ tasks: tasksStore.getAll() });
     },
 
-    onSaveItemClick: function(task) {
+    saveItem: function(task) {
         this.props.app.executeAction('updateTask', task);
     },
 
-    onRemoveItemClick: function(task) {
+    removeItem: function(task) {
         this.props.app.executeAction('removeTask', task);
     },
 
@@ -35,12 +35,12 @@ module.exports = React.createClass({
         if (tasks.length === 0) return <h3>No tasks. Just hanging.</h3>;
 
         return (
-            <ul>
+            <ol>
                 {_.map(tasks, function(task) {
                     return <TaskItem key={task.id} task={task}
-                        onSaveClick={me.onSaveItemClick} onRemoveClick={me.onRemoveItemClick} />;
+                        handleSave={me.saveItem} handleRemove={me.removeItem} />;
                 })}
-            </ul>
+            </ol>
         );
     }
 });

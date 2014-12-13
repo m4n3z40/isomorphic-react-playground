@@ -183,17 +183,17 @@ module.exports = React.createClass({displayName: 'exports',
         return {value: ''};
     },
 
-    onKeyDown: function(e) {
+    handleKeyDown: function(e) {
         if (e.keyCode === SPACE_KEY) {
-            this.onAddTask();
+            this.createTask();
         }
     },
 
-    onTextChange: function(e) {
+    handleTextChange: function(e) {
         this.setState({value: e.target.value});
     },
 
-    onAddTask: function() {
+    createTask: function() {
         this.props.app.executeAction('createTask', this.state.value);
 
         this.setState({value: ''});
@@ -203,15 +203,17 @@ module.exports = React.createClass({displayName: 'exports',
         return (
             React.createElement("footer", null, 
                 React.createElement("input", {type: "text", placeholder: this.props.placeholder, value: this.state.value, 
-                    onChange: this.onTextChange, 
-                    onKeyUp: this.onKeyDown}), 
-                React.createElement("button", {onClick: this.onAddTask}, "Add task")
+                    onChange: this.handleTextChange, 
+                    onKeyUp: this.handleKeyDown}), 
+                React.createElement("button", {onClick: this.createTask}, "Add task")
             )
         );
     }
 });
 },{"react":171}],9:[function(require,module,exports){
 var React = require('react');
+
+var SPACE_KEY = 13;
 
 module.exports = React.createClass({displayName: 'exports',
     getDefaultProps: function() {
@@ -224,36 +226,52 @@ module.exports = React.createClass({displayName: 'exports',
         return {text: task.text, editing: task.editing};
     },
 
-    onRemoveClick: function() {
-        if (this.props.onRemoveClick) {
-            this.props.onRemoveClick(this.props.task);
+    removeTask: function() {
+        if (this.props.handleRemove) {
+            this.props.handleRemove(this.props.task);
         }
     },
 
-    onSaveClick: function() {
-        if(this.props.onSaveClick) {
+    saveTask: function() {
+        if(this.props.handleSave) {
             var task = this.props.task;
 
-            this.props.onSaveClick({
+            this.props.handleSave({
                 id: task.id,
                 text: this.state.text,
-                completed: task.completed,
                 editing: false
             });
         }
     },
 
-    onEditClick: function() {
+    compleTask: function() {
+        if(this.props.handleSave) {
+            var task = this.props.task;
+
+            this.props.handleSave({
+                id: task.id,
+                completed: !task.completed
+            });
+        }
+    },
+
+    editTask: function() {
         this.props.task.editing = true;
 
         this.setState({editing: true});
     },
 
-    onEditFieldChange: function(e) {
+    handleEditFieldChange: function(e) {
         this.setState({text: e.target.value});
     },
 
-    onCancelEditing: function() {
+    handleEditFieldKeyDown: function(e) {
+        if (e.keyCode === SPACE_KEY) {
+            this.saveTask();
+        }
+    },
+
+    handleCancelEditing: function() {
         var task = this.props.task;
 
         task.editing = false;
@@ -270,19 +288,20 @@ module.exports = React.createClass({displayName: 'exports',
             taskContent;
 
         if (editing) {
-            taskContent = React.createElement("input", {type: "text", value: text, onChange: this.onEditFieldChange});
-            buttons.push(React.createElement("button", {key: "cancel", onClick: this.onCancelEditing}, "Cancel"));
-            buttons.push(React.createElement("button", {key: "save", onClick: this.onSaveClick}, "Save"));
+            taskContent = React.createElement("input", {type: "text", value: text, onChange: this.handleEditFieldChange, onKeyDown: this.handleEditFieldKeyDown});
+            buttons.push(React.createElement("button", {key: "cancel", onClick: this.handleCancelEditing}, "Cancel"));
+            buttons.push(React.createElement("button", {key: "save", onClick: this.saveTask}, "Save"));
         } else {
             taskContent = text;
-            buttons.push(React.createElement("button", {key: "remove", onClick: this.onRemoveClick}, "Remove"));
-            buttons.push(React.createElement("button", {key: "edit", onClick: this.onEditClick}, "Edit"));
+            buttons.push(React.createElement("button", {key: "remove", onClick: this.removeTask}, "Remove"));
+            buttons.push(React.createElement("button", {key: "edit", onClick: this.editTask}, "Edit"));
         }
 
         return (
             React.createElement("li", {className: completed ? 'done' : 'pending'}, 
                 React.createElement("label", null, 
-                    React.createElement("input", {type: "checkbox", name: "completed", className: editing ? 'hidden' : ''}), 
+                    React.createElement("input", {type: "checkbox", name: "completed", className: editing ? 'hidden' : '', 
+                        onChange: this.compleTask}), 
                     taskContent
                 ), 
                 buttons
@@ -326,11 +345,11 @@ module.exports = React.createClass({displayName: 'exports',
         this.setState({ tasks: tasksStore.getAll() });
     },
 
-    onSaveItemClick: function(task) {
+    saveItem: function(task) {
         this.props.app.executeAction('updateTask', task);
     },
 
-    onRemoveItemClick: function(task) {
+    removeItem: function(task) {
         this.props.app.executeAction('removeTask', task);
     },
 
@@ -341,10 +360,10 @@ module.exports = React.createClass({displayName: 'exports',
         if (tasks.length === 0) return React.createElement("h3", null, "No tasks. Just hanging.");
 
         return (
-            React.createElement("ul", null, 
+            React.createElement("ol", null, 
                 _.map(tasks, function(task) {
                     return React.createElement(TaskItem, {key: task.id, task: task, 
-                        onSaveClick: me.onSaveItemClick, onRemoveClick: me.onRemoveItemClick});
+                        handleSave: me.saveItem, handleRemove: me.removeItem});
                 })
             )
         );
