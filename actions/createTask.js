@@ -1,5 +1,13 @@
 var TasksContants = require('../constants/tasks');
 
+/**
+ * Creates a task and emits all events regarding its creation
+ *
+ * @param {Application} app
+ * @param {Object} payload
+ * @param {Function} callback
+ * @return {void}
+ */
 function createTask(app, payload, callback) {
     var task = app.getStore('TasksStore').createTask(payload);
 

@@ -1,6 +1,14 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var TasksContants = require('../constants/tasks');
 
+/**
+ * Creates a task and emits all events regarding its creation
+ *
+ * @param {Application} app
+ * @param {Object} payload
+ * @param {Function} callback
+ * @return {void}
+ */
 function createTask(app, payload, callback) {
     var task = app.getStore('TasksStore').createTask(payload);
 
@@ -21,6 +29,14 @@ module.exports = createTask;
 },{"../constants/tasks":15}],2:[function(require,module,exports){
 var TasksContants = require('../constants/tasks');
 
+/**
+ * Emits a filter action
+ *
+ * @param {Application} app
+ * @param {Object} payload
+ * @param {Function} callback
+ * @return {void}
+ */
 function filterTasks(app, payload, callback) {
     app.emit(TasksContants.FILTER, payload);
 }
@@ -29,6 +45,14 @@ module.exports = filterTasks;
 },{"../constants/tasks":15}],3:[function(require,module,exports){
 var TasksContants = require('../constants/tasks');
 
+/**
+ * Removes a task and Emits all events its removal
+ *
+ * @param {Application} app
+ * @param {Object} payload
+ * @param {Function} callback
+ * @return {void}
+ */
 function removeTask(app, payload, callback) {
     app.emit(TasksContants.DESTROY_START, payload);
 
@@ -47,6 +71,14 @@ module.exports = removeTask;
 },{"../constants/tasks":15}],4:[function(require,module,exports){
 var TasksContants = require('../constants/tasks');
 
+/**
+ * Retrieves all tasks and emits all events regarding showing
+ *
+ * @param {Application} app
+ * @param {Object} payload
+ * @param {Function} callback
+ * @return {void}
+ */
 function showTasks(app, payload, callback) {
     app.emit(TasksContants.RETRIEVE_START, payload);
 
@@ -65,6 +97,14 @@ module.exports = showTasks;
 },{"../constants/tasks":15}],5:[function(require,module,exports){
 var TasksContants = require('../constants/tasks');
 
+/**
+ * Updates a task and emits all events regarding its update
+ *
+ * @param {Application} app
+ * @param {Object} payload
+ * @param {Function} callback
+ * @return {void}
+ */
 function updateTask(app, payload, callback) {
     app.emit(TasksContants.UPDATE_START, payload);
 
@@ -367,8 +407,24 @@ var Class = require('./class'),
     serverConfig = require('../../configs/server'),
     _ = require('lodash');
 
+/**
+ * Prefix for the stores contained in the container
+ *
+ * @type {string}
+ */
 var STORES_PREFIX = 'store.';
+
+/**
+ * Prefix for the actions contained in the container
+ *
+ * @type {string}
+ */
 var ACTIONS_PREFIX = 'action.';
+
+/**
+ * Prefix for the services contained in the container
+ * @type {string}
+ */
 var SERVICES_PREFIX = 'service.';
 
 module.exports = Class.extend({
@@ -26571,8 +26627,18 @@ var _ = require('lodash'),
     savedTask;
 
 module.exports = Store.extend({
+    /**
+     * Identifier of the store
+     *
+     * @type {string}
+     */
     name: 'TasksStore',
 
+    /**
+     * Returns the default handlers for actions that the store listens to
+     *
+     * @return {Object}
+     */
     getDefaultHandlers: function() {
         var handlers = {};
 
@@ -26588,10 +26654,21 @@ module.exports = Store.extend({
         return handlers;
     },
 
+    /**
+     * Initializes the store
+     *
+     * @returns {void}
+     */
     initialize: function() {
         this.tasks = [];
     },
 
+    /**
+     * Returns a new task object
+     *
+     * @param {string} task
+     * @return {Object}
+     */
     createTask: function(task) {
         return {
             id: 'tsk_' + (new Date()).valueOf(),
@@ -26601,38 +26678,80 @@ module.exports = Store.extend({
         };
     },
 
+    /**
+     * Returns all tasks present now in the store
+     *
+     * @return {Array}
+     */
     getAll: function() {
         return this.tasks;
     },
 
+    /**
+     * Returns the current state of the store for being restored later
+     *
+     * @return {Object}
+     */
     saveState: function() {
-        return {
-            tasks: this.tasks
-        };
+        return {tasks: this.tasks};
     },
 
+    /**
+     * Restores the saved state of the store
+     *
+     * @param {string} state
+     * @return {void}
+     */
     restoreState: function(state) {
-        this.tasks = state.tasks;
+        this.tasks = state.tasks || [];
     },
 
+    /**
+     * Handler for when the retrieve_success action is executed
+     *
+     * @param {Array} tasks
+     * @return {void}
+     * @protected
+     */
     _onRetrieveSuccess: function(tasks) {
         this.tasks = tasks;
 
         this.emitChanges();
     },
 
+    /**
+     * Handler for when the create_start action is executed
+     *
+     * @param {Object} task
+     * @return {void}
+     * @protected
+     */
     _onCreateStart: function(task) {
         this.tasks.push(task);
 
         this.emitChanges();
     },
 
+    /**
+     * Handler for when the create_error action is executed
+     *
+     * @param {Error} error
+     * @return {void}
+     * @protected
+     */
     _onCreateError: function(error) {
         this.tasks.pop();
 
         this.emitChanges();
     },
 
+    /**
+     * Handler for when the update_start action is executed
+     *
+     * @param {Object} task
+     * @return {void}
+     * @protected
+     */
     _onUpdateStart: function(task) {
         var oldTask = _.first(this.tasks, {id: task.id});
 
@@ -26646,6 +26765,13 @@ module.exports = Store.extend({
         }
     },
 
+    /**
+     * Handler for when the update_error action is executed
+     *
+     * @param {Error} error
+     * @return {void}
+     * @protected
+     */
     _onUpdateError: function(error) {
         var newTask = _.first(this.tasks, {id: savedTask.id});
 
@@ -26659,6 +26785,13 @@ module.exports = Store.extend({
         }
     },
 
+    /**
+     * Handler for when the destroy_start action is executed
+     *
+     * @param {Object} task
+     * @return {void}
+     * @protected
+     */
     _onDestroyStart: function(task) {
         _.remove(this.tasks, {id: task.id});
 
@@ -26667,7 +26800,13 @@ module.exports = Store.extend({
         this.emitChanges();
     },
 
-    _onDestroyError: function(error) {
+    /**
+     * Handler for when the destroy_error action is executed
+     *
+     * @return {void}
+     * @protected
+     */
+    _onDestroyError: function() {
         this.tasks.push(savedTask);
 
         savedTask = null;
@@ -26675,6 +26814,12 @@ module.exports = Store.extend({
         this.emitChanges();
     },
 
+    /**
+     * Handler for when the filter action is executed
+     *
+     * @param {Object} filter
+     * @protected
+     */
     _onFilter: function(filter) {
         var tasks = this.tasks;
 

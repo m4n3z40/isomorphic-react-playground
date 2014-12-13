@@ -1,5 +1,13 @@
 var TasksContants = require('../constants/tasks');
 
+/**
+ * Removes a task and Emits all events its removal
+ *
+ * @param {Application} app
+ * @param {Object} payload
+ * @param {Function} callback
+ * @return {void}
+ */
 function removeTask(app, payload, callback) {
     app.emit(TasksContants.DESTROY_START, payload);
 

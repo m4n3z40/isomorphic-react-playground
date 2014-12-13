@@ -1,5 +1,13 @@
 var TasksContants = require('../constants/tasks');
 
+/**
+ * Updates a task and emits all events regarding its update
+ *
+ * @param {Application} app
+ * @param {Object} payload
+ * @param {Function} callback
+ * @return {void}
+ */
 function updateTask(app, payload, callback) {
     app.emit(TasksContants.UPDATE_START, payload);
 
