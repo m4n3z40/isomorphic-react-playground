@@ -24,6 +24,10 @@ module.exports = React.createClass({
         this.props.app.executeAction('updateTask', task);
     },
 
+    onRemoveItemClick: function(task) {
+        this.props.app.executeAction('removeTask', task);
+    },
+
     render: function() {
         var me = this,
             tasks = this.state.tasks;
@@ -33,7 +37,8 @@ module.exports = React.createClass({
         return (
             <ul>
                 {_.map(tasks, function(task) {
-                    return <TaskItem key={task.id} task={task} onSaveClick={me.onSaveItemClick} />;
+                    return <TaskItem key={task.id} task={task}
+                        onSaveClick={me.onSaveItemClick} onRemoveClick={me.onRemoveItemClick} />;
                 })}
             </ul>
         );

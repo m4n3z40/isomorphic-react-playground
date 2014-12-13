@@ -12,7 +12,9 @@ module.exports = React.createClass({
     },
 
     onRemoveClick: function() {
-
+        if (this.props.onRemoveClick) {
+            this.props.onRemoveClick(this.props.task);
+        }
     },
 
     onSaveClick: function() {

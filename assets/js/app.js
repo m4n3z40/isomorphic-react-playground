@@ -225,7 +225,9 @@ module.exports = React.createClass({displayName: 'exports',
     },
 
     onRemoveClick: function() {
-
+        if (this.props.onRemoveClick) {
+            this.props.onRemoveClick(this.props.task);
+        }
     },
 
     onSaveClick: function() {
@@ -328,6 +330,10 @@ module.exports = React.createClass({displayName: 'exports',
         this.props.app.executeAction('updateTask', task);
     },
 
+    onRemoveItemClick: function(task) {
+        this.props.app.executeAction('removeTask', task);
+    },
+
     render: function() {
         var me = this,
             tasks = this.state.tasks;
@@ -337,7 +343,8 @@ module.exports = React.createClass({displayName: 'exports',
         return (
             React.createElement("ul", null, 
                 _.map(tasks, function(task) {
-                    return React.createElement(TaskItem, {key: task.id, task: task, onSaveClick: me.onSaveItemClick});
+                    return React.createElement(TaskItem, {key: task.id, task: task, 
+                        onSaveClick: me.onSaveItemClick, onRemoveClick: me.onRemoveItemClick});
                 })
             )
         );
