@@ -12,10 +12,6 @@ module.exports = React.createClass({
         }
     },
 
-    onAddTask: function(task) {
-        this.props.app.executeAction('createTask', task);
-    },
-
     render: function() {
         var props = this.props;
 
@@ -23,7 +19,7 @@ module.exports = React.createClass({
             <div>
                 <TasksFilter {...props} />
                 <TasksList {...props} />
-                <TaskComposer {...props} onAddTask={this.onAddTask} />
+                <TaskComposer {...props} />
             </div>
         );
     }

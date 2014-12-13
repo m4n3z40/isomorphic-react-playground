@@ -157,10 +157,6 @@ module.exports = React.createClass({displayName: 'exports',
         }
     },
 
-    onAddTask: function(task) {
-        this.props.app.executeAction('createTask', task);
-    },
-
     render: function() {
         var props = this.props;
 
@@ -168,7 +164,7 @@ module.exports = React.createClass({displayName: 'exports',
             React.createElement("div", null, 
                 React.createElement(TasksFilter, React.__spread({},  props)), 
                 React.createElement(TasksList, React.__spread({},  props)), 
-                React.createElement(TaskComposer, React.__spread({},  props, {onAddTask: this.onAddTask}))
+                React.createElement(TaskComposer, React.__spread({},  props))
             )
         );
     }
@@ -176,9 +172,21 @@ module.exports = React.createClass({displayName: 'exports',
 },{"./TaskComposer.jsx":8,"./TasksFilter.jsx":10,"./TasksList.jsx":11,"react":171}],8:[function(require,module,exports){
 var React = require('react');
 
+var SPACE_KEY = 13;
+
 module.exports = React.createClass({displayName: 'exports',
+    getDefaultProps: function() {
+        return {placeholder: 'Describe a task'};
+    },
+
     getInitialState: function() {
         return {value: ''};
+    },
+
+    onKeyDown: function(e) {
+        if (e.keyCode === SPACE_KEY) {
+            this.onAddTask();
+        }
     },
 
     onTextChange: function(e) {
@@ -186,17 +194,17 @@ module.exports = React.createClass({displayName: 'exports',
     },
 
     onAddTask: function() {
-        if (this.props.onAddTask) {
-            this.props.onAddTask(this.state.value);
+        this.props.app.executeAction('createTask', this.state.value);
 
-            this.setState({value: ''});
-        }
+        this.setState({value: ''});
     },
 
     render: function() {
         return (
             React.createElement("footer", null, 
-                React.createElement("textarea", {onChange: this.onTextChange, placeholder: "Describe a task here", value: this.state.value}), 
+                React.createElement("input", {type: "text", placeholder: this.props.placeholder, value: this.state.value, 
+                    onChange: this.onTextChange, 
+                    onKeyUp: this.onKeyDown}), 
                 React.createElement("button", {onClick: this.onAddTask}, "Add task")
             )
         );
@@ -207,34 +215,75 @@ var React = require('react');
 
 module.exports = React.createClass({displayName: 'exports',
     getDefaultProps: function() {
-        return {
-            completed: false,
-            text: ''
+        return {task: null};
+    },
+
+    getInitialState: function() {
+        var task = this.props.task;
+
+        return {text: task.text, editing: task.editing};
+    },
+
+    onRemoveClick: function() {
+
+    },
+
+    onSaveClick: function() {
+        if(this.props.onSaveClick) {
+            var task = this.props.task;
+
+            this.props.onSaveClick({
+                id: task.id,
+                text: this.state.text,
+                completed: task.completed,
+                editing: false
+            });
         }
     },
 
-    render: function() {
-        var props = this.props,
-            completed = props.completed,
-            text = props.text,
-            taskContent,
-            button;
+    onEditClick: function() {
+        this.props.task.editing = true;
 
-        if (props.editing) {
-            taskContent = React.createElement("input", {type: "text", value: text});
-            button = React.createElement("button", null, "Save");
+        this.setState({editing: true});
+    },
+
+    onEditFieldChange: function(e) {
+        this.setState({text: e.target.value});
+    },
+
+    onCancelEditing: function() {
+        var task = this.props.task;
+
+        task.editing = false;
+
+        this.setState({text: task.text, editing: false});
+    },
+
+    render: function() {
+        var task = this.props.task,
+            completed = task.completed,
+            editing = task.editing,
+            text = this.state.text,
+            buttons = [],
+            taskContent;
+
+        if (editing) {
+            taskContent = React.createElement("input", {type: "text", value: text, onChange: this.onEditFieldChange});
+            buttons.push(React.createElement("button", {key: "cancel", onClick: this.onCancelEditing}, "Cancel"));
+            buttons.push(React.createElement("button", {key: "save", onClick: this.onSaveClick}, "Save"));
         } else {
             taskContent = text;
-            button = React.createElement("button", null, "Edit");
+            buttons.push(React.createElement("button", {key: "remove", onClick: this.onRemoveClick}, "Remove"));
+            buttons.push(React.createElement("button", {key: "edit", onClick: this.onEditClick}, "Edit"));
         }
 
         return (
             React.createElement("li", {className: completed ? 'done' : 'pending'}, 
                 React.createElement("label", null, 
-                    React.createElement("input", {type: "checkbox", name: "completed"}), 
+                    React.createElement("input", {type: "checkbox", name: "completed", className: editing ? 'hidden' : ''}), 
                     taskContent
                 ), 
-                button
+                buttons
             )
         );
     }
@@ -275,15 +324,20 @@ module.exports = React.createClass({displayName: 'exports',
         this.setState({ tasks: tasksStore.getAll() });
     },
 
+    onSaveItemClick: function(task) {
+        this.props.app.executeAction('updateTask', task);
+    },
+
     render: function() {
-        var tasks = this.state.tasks;
+        var me = this,
+            tasks = this.state.tasks;
 
         if (tasks.length === 0) return React.createElement("h3", null, "No tasks. Just hanging.");
 
         return (
             React.createElement("ul", null, 
                 _.map(tasks, function(task) {
-                    return React.createElement(TaskItem, {key: task.id, text: task.text, completed: task.completed, editing: task.editing})
+                    return React.createElement(TaskItem, {key: task.id, task: task, onSaveClick: me.onSaveItemClick});
                 })
             )
         );
@@ -26753,13 +26807,16 @@ module.exports = Store.extend({
      * @protected
      */
     _onUpdateStart: function(task) {
-        var oldTask = _.first(this.tasks, {id: task.id});
+        var taskIndex = _.findIndex(this.tasks, {'id': task.id}),
+            oldTask, newTask;
 
-        if (oldTask) {
+        if (taskIndex > -1) {
+            oldTask = this.tasks[taskIndex];
+            newTask = _.assign({}, oldTask, task);
+
             savedTask = _.clone(oldTask);
 
-            oldTask.completed = task.completed;
-            oldTask.text = task.text;
+            this.tasks.splice(taskIndex, 1, newTask);
 
             this.emitChanges();
         }
@@ -26773,7 +26830,7 @@ module.exports = Store.extend({
      * @protected
      */
     _onUpdateError: function(error) {
-        var newTask = _.first(this.tasks, {id: savedTask.id});
+        var newTask = _.find(this.tasks, {'id': savedTask.id});
 
         if (newTask) {
             newTask.completed = savedTask.completed;

@@ -130,13 +130,16 @@ module.exports = Store.extend({
      * @protected
      */
     _onUpdateStart: function(task) {
-        var oldTask = _.first(this.tasks, {id: task.id});
+        var taskIndex = _.findIndex(this.tasks, {'id': task.id}),
+            oldTask, newTask;
 
-        if (oldTask) {
+        if (taskIndex > -1) {
+            oldTask = this.tasks[taskIndex];
+            newTask = _.assign({}, oldTask, task);
+
             savedTask = _.clone(oldTask);
 
-            oldTask.completed = task.completed;
-            oldTask.text = task.text;
+            this.tasks.splice(taskIndex, 1, newTask);
 
             this.emitChanges();
         }
@@ -150,7 +153,7 @@ module.exports = Store.extend({
      * @protected
      */
     _onUpdateError: function(error) {
-        var newTask = _.first(this.tasks, {id: savedTask.id});
+        var newTask = _.find(this.tasks, {'id': savedTask.id});
 
         if (newTask) {
             newTask.completed = savedTask.completed;

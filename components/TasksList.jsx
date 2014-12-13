@@ -20,15 +20,20 @@ module.exports = React.createClass({
         this.setState({ tasks: tasksStore.getAll() });
     },
 
+    onSaveItemClick: function(task) {
+        this.props.app.executeAction('updateTask', task);
+    },
+
     render: function() {
-        var tasks = this.state.tasks;
+        var me = this,
+            tasks = this.state.tasks;
 
         if (tasks.length === 0) return <h3>No tasks. Just hanging.</h3>;
 
         return (
             <ul>
                 {_.map(tasks, function(task) {
-                    return <TaskItem key={task.id} text={task.text} completed={task.completed} editing={task.editing} />
+                    return <TaskItem key={task.id} task={task} onSaveClick={me.onSaveItemClick} />;
                 })}
             </ul>
         );

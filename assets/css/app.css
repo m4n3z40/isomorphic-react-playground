@@ -4,3 +4,6 @@ body {
 h3 {
   color: #00f;
 }
+.hidden {
+  display: none;
+}
