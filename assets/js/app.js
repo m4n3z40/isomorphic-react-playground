@@ -351,6 +351,11 @@ module.exports = React.createClass({displayName: 'exports',
 
     clearTextFilter: function() {
         this.setState({textFilter: ''});
+
+        this.props.app.executeAction('filterTasks', {
+            hideCompleted: this.state.hideCompleted,
+            byText: ''
+        });
     },
 
     render: function() {
@@ -360,7 +365,7 @@ module.exports = React.createClass({displayName: 'exports',
                     React.createElement("input", {type: "checkbox", checked: this.state.hideCompleted, 
                         onChange: this.handleShowCompletedChange}), "Hide completed"
                 ), 
-                React.createElement("input", {type: "text", placeholder: "Filter tasks", value: this.state.byText, onChange: this.handleTextFilterChange}), 
+                React.createElement("input", {type: "text", placeholder: "Filter tasks", value: this.state.textFilter, onChange: this.handleTextFilterChange}), 
                 React.createElement("button", {onClick: this.clearTextFilter}, "Clear")
             )
         );
@@ -26818,7 +26823,7 @@ module.exports = Store.extend({
 
         if (filters.byText) {
             tasks = _.filter(tasks, function(task) {
-                return task.text.indexOf(filters.byText) > -1;
+                return task.text.toLowerCase().indexOf(filters.byText.toLowerCase()) > -1;
             });
         }
 

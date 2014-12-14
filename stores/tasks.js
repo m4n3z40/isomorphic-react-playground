@@ -71,7 +71,7 @@ module.exports = Store.extend({
 
         if (filters.byText) {
             tasks = _.filter(tasks, function(task) {
-                return task.text.indexOf(filters.byText) > -1;
+                return task.text.toLowerCase().indexOf(filters.byText.toLowerCase()) > -1;
             });
         }
 

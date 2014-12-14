@@ -39,6 +39,11 @@ module.exports = React.createClass({
 
     clearTextFilter: function() {
         this.setState({textFilter: ''});
+
+        this.props.app.executeAction('filterTasks', {
+            hideCompleted: this.state.hideCompleted,
+            byText: ''
+        });
     },
 
     render: function() {
@@ -48,7 +53,7 @@ module.exports = React.createClass({
                     <input type="checkbox" checked={this.state.hideCompleted}
                         onChange={this.handleShowCompletedChange} />Hide completed
                 </label>
-                <input type="text" placeholder="Filter tasks" value={this.state.byText} onChange={this.handleTextFilterChange} />
+                <input type="text" placeholder="Filter tasks" value={this.state.textFilter} onChange={this.handleTextFilterChange} />
                 <button onClick={this.clearTextFilter}>Clear</button>
             </header>
         );
