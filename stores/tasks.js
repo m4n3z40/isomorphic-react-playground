@@ -38,6 +38,7 @@ module.exports = Store.extend({
      */
     initialize: function() {
         this.tasks = [];
+        this.__appliedFilters = {};
     },
 
     /**
@@ -61,7 +62,20 @@ module.exports = Store.extend({
      * @return {Array}
      */
     getAll: function() {
-        return this.tasks;
+        var tasks =  this.tasks,
+            filters = this.__appliedFilters;
+
+        if (filters.hideCompleted) {
+            tasks = _.filter(tasks, {'completed': false});
+        }
+
+        if (filters.byText) {
+            tasks = _.filter(tasks, function(task) {
+                return task.text.indexOf(filters.byText) > -1;
+            });
+        }
+
+        return tasks;
     },
 
     /**
@@ -201,19 +215,7 @@ module.exports = Store.extend({
      * @protected
      */
     _onFilter: function(filter) {
-        var tasks = this.tasks;
-
-        if (filter.byCompleted) {
-            tasks = _.filter(this.tasks, 'completed');
-        }
-
-        if (filter.byText) {
-            tasks = _.filter(this.tasks, function(task) {
-                new RegExp(filter.byText).test(task.text);
-            });
-        }
-
-        this.tasks = tasks;
+        this.__appliedFilters = filter;
 
         this.emitChanges();
     }

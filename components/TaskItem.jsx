@@ -31,7 +31,7 @@ module.exports = React.createClass({
         }
     },
 
-    compleTask: function() {
+    completeTask: function() {
         if(this.props.handleSave) {
             var task = this.props.task;
 
@@ -87,8 +87,8 @@ module.exports = React.createClass({
         return (
             <li className={completed ? 'done' : 'pending'}>
                 <label>
-                    <input type="checkbox" name="completed" className={editing ? 'hidden' : ''}
-                        onChange={this.compleTask} />
+                    <input type="checkbox" checked={completed} className={editing ? 'hidden' : ''}
+                        onChange={this.completeTask} />
                     {taskContent}
                 </label>
                 {buttons}
