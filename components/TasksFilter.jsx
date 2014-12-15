@@ -16,7 +16,7 @@ module.exports = React.createClass({
         };
     },
 
-    applyFilter: function(filters) {
+    applyFilters: function(filters) {
         var newState = _.assign({}, this.state, filters);
 
         this.props.app.executeAction('filterTasks', newState);
@@ -24,15 +24,15 @@ module.exports = React.createClass({
     },
 
     handleShowCompletedChange: function() {
-        this.applyFilter({hideCompleted: !this.state.hideCompleted});
+        this.applyFilters({hideCompleted: !this.state.hideCompleted});
     },
 
     handleTextFilterChange: function(e) {
-        this.applyFilter({byText: e.target.value});
+        this.applyFilters({byText: e.target.value});
     },
 
     clearTextFilter: function() {
-        this.applyFilter({byText: ''});
+        this.applyFilters({byText: ''});
     },
 
     render: function() {
