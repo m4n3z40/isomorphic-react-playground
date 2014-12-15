@@ -1,4 +1,5 @@
-var React = require('react');
+var React = require('react'),
+    _ = require('lodash');
 
 module.exports = React.createClass({
     getDefaultProps: function() {
@@ -11,39 +12,27 @@ module.exports = React.createClass({
     getInitialState: function() {
         return {
             hideCompleted: this.props.hideCompleted,
-            textFilter: this.props.byText
+            byText: this.props.byText
         };
     },
 
+    applyFilter: function(filters) {
+        var newState = _.assign({}, this.state, filters);
+
+        this.props.app.executeAction('filterTasks', newState);
+        this.setState(newState);
+    },
+
     handleShowCompletedChange: function() {
-        var hideCompleted = !this.state.hideCompleted;
-
-        this.props.app.executeAction('filterTasks', {
-            hideCompleted: hideCompleted,
-            byText: this.state.textFilter
-        });
-
-        this.setState({hideCompleted: hideCompleted});
+        this.applyFilter({hideCompleted: !this.state.hideCompleted});
     },
 
     handleTextFilterChange: function(e) {
-        var text = e.target.value;
-
-        this.props.app.executeAction('filterTasks', {
-            hideCompleted: this.state.hideCompleted,
-            byText: text
-        });
-
-        this.setState({textFilter: text});
+        this.applyFilter({byText: e.target.value});
     },
 
     clearTextFilter: function() {
-        this.setState({textFilter: ''});
-
-        this.props.app.executeAction('filterTasks', {
-            hideCompleted: this.state.hideCompleted,
-            byText: ''
-        });
+        this.applyFilter({byText: ''});
     },
 
     render: function() {
@@ -53,7 +42,7 @@ module.exports = React.createClass({
                     <input type="checkbox" checked={this.state.hideCompleted}
                         onChange={this.handleShowCompletedChange} />Hide completed
                 </label>
-                <input type="text" placeholder="Filter tasks" value={this.state.textFilter} onChange={this.handleTextFilterChange} />
+                <input type="text" placeholder="Filter tasks" value={this.state.byText} onChange={this.handleTextFilterChange} />
                 <button onClick={this.clearTextFilter}>Clear</button>
             </header>
         );
