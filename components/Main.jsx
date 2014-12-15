@@ -4,6 +4,11 @@ var React = require('react'),
     TaskComposer = require('./TaskComposer.jsx');
 
 module.exports = React.createClass({
+    /**
+     * Returns the default props for this Component
+     *
+     * @return {Object}
+     */
     getDefaultProps: function() {
         return {
             app: null,
@@ -12,6 +17,11 @@ module.exports = React.createClass({
         }
     },
 
+    /**
+     * Renders the content of the component and its children
+     *
+     * @return {XML}
+     */
     render: function() {
         var props = this.props;
 
