@@ -5,6 +5,8 @@ require('node-jsx').install({extension: '.jsx'});
 var express = require('express');
 var app = require('./app');
 var React = require('react');
+var bodyParser = require('body-parser');
+var TasksApi = require('./api/tasks');
 
 //Creates the App instance on the server
 var serverApp = express();
@@ -14,8 +16,15 @@ serverApp.set('views', './views');
 serverApp.set('view engine', 'jade');
 serverApp.engine('jade', require('jade').__express);
 
+//Configuring body parsers
+serverApp.use(bodyParser.json());
+serverApp.use(bodyParser.urlencoded({extended: true}));
+
 //Configures the assets static server at the /assets endpoint
 serverApp.use('/assets', express.static('assets'));
+
+//Configures the api routes
+serverApp.use('/api', TasksApi);
 
 //Gets the app config
 var appConfig = app.config('app');

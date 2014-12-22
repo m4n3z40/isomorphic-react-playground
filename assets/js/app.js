@@ -149,6 +149,11 @@ var React = require('react'),
     TaskComposer = require('./TaskComposer.jsx');
 
 module.exports = React.createClass({displayName: 'exports',
+    /**
+     * Returns the default props for this Component
+     *
+     * @return {Object}
+     */
     getDefaultProps: function() {
         return {
             app: null,
@@ -157,6 +162,11 @@ module.exports = React.createClass({displayName: 'exports',
         }
     },
 
+    /**
+     * Renders the content of the component and its children
+     *
+     * @return {XML}
+     */
     render: function() {
         var props = this.props;
 
@@ -172,33 +182,65 @@ module.exports = React.createClass({displayName: 'exports',
 },{"./TaskComposer.jsx":8,"./TasksFilter.jsx":10,"./TasksList.jsx":11,"react":171}],8:[function(require,module,exports){
 var React = require('react');
 
-var SPACE_KEY = 13;
+var ENTER_KEY = 13;
 
 module.exports = React.createClass({displayName: 'exports',
+    /**
+     * Returns the initial props for this component
+     *
+     * @return {Object}
+     */
     getDefaultProps: function() {
         return {placeholder: 'Describe a task'};
     },
 
+    /**
+     * Returns the initial state object for this component
+     *
+     * @return {Object}
+     */
     getInitialState: function() {
         return {value: ''};
     },
 
+    /**
+     * Checks if the Enter key has been pressed and creates a task if it has
+     *
+     * @param {SyntheticEvent} e
+     * @return {void}
+     */
     handleKeyDown: function(e) {
-        if (e.keyCode === SPACE_KEY) {
+        if (e.keyCode === ENTER_KEY) {
             this.createTask();
         }
     },
 
+    /**
+     * Changes the state value whenever the text in the input changes
+     *
+     * @param {SyntheticEvent} e
+     * @return {void}
+     */
     handleTextChange: function(e) {
         this.setState({value: e.target.value});
     },
 
+    /**
+     * Dispatches an action for crating a task and resets the state value
+     *
+     * @return {void}
+     */
     createTask: function() {
         this.props.app.executeAction('createTask', this.state.value);
 
         this.setState({value: ''});
     },
 
+    /**
+     * Renders the content of the component and its children
+     *
+     * @return {XML}
+     */
     render: function() {
         return (
             React.createElement("footer", null, 
@@ -213,25 +255,45 @@ module.exports = React.createClass({displayName: 'exports',
 },{"react":171}],9:[function(require,module,exports){
 var React = require('react');
 
-var SPACE_KEY = 13;
+var ENTER_KEY = 13;
 
 module.exports = React.createClass({displayName: 'exports',
+    /**
+     * Returns the initial props for this component
+     *
+     * @return {Object}
+     */
     getDefaultProps: function() {
         return {task: null};
     },
 
+    /**
+     * Returns the initial state object for this component
+     *
+     * @return {Object}
+     */
     getInitialState: function() {
         var task = this.props.task;
 
         return {text: task.text, editing: task.editing};
     },
 
+    /**
+     * Delegates the removing of a task to the parent by the handler in the props
+     *
+     * @return {void}
+     */
     removeTask: function() {
         if (this.props.handleRemove) {
             this.props.handleRemove(this.props.task);
         }
     },
 
+    /**
+     * Delegates the update of a task to the parent by the handler in the props
+     *
+     * @return {void}
+     */
     saveTask: function() {
         if(this.props.handleSave) {
             var task = this.props.task;
@@ -244,6 +306,11 @@ module.exports = React.createClass({displayName: 'exports',
         }
     },
 
+    /**
+     * Delegates the update of a task to the parent by the handler in the props
+     *
+     * @return {void}
+     */
     completeTask: function() {
         if(this.props.handleSave) {
             var task = this.props.task;
@@ -255,22 +322,42 @@ module.exports = React.createClass({displayName: 'exports',
         }
     },
 
+    /**
+     * Changes the state of a task for editing
+     *
+     * @return {void}
+     */
     editTask: function() {
-        this.props.task.editing = true;
-
         this.setState({editing: true});
     },
 
+    /**
+     * Updates the text for state with the text being entered by the user
+     *
+     * @param {SyntheticEvent} e
+     * @return {void}
+     */
     handleEditFieldChange: function(e) {
         this.setState({text: e.target.value});
     },
 
+    /**
+     * Checks if the Enter key has been pressed and saves the task if it has
+     *
+     * @param {SyntheticEvent} e
+     * @return {void}
+     */
     handleEditFieldKeyDown: function(e) {
-        if (e.keyCode === SPACE_KEY) {
+        if (e.keyCode === ENTER_KEY) {
             this.saveTask();
         }
     },
 
+    /**
+     * Cancels the editing, changing the state of the component
+     *
+     * @return {void}
+     */
     handleCancelEditing: function() {
         var task = this.props.task;
 
@@ -279,6 +366,11 @@ module.exports = React.createClass({displayName: 'exports',
         this.setState({text: task.text, editing: false});
     },
 
+    /**
+     * Renders the content of the component and its children
+     *
+     * @return {XML}
+     */
     render: function() {
         var task = this.props.task,
             completed = task.completed,
@@ -314,6 +406,11 @@ var React = require('react'),
     _ = require('lodash');
 
 module.exports = React.createClass({displayName: 'exports',
+    /**
+     * Returns the initial props for this component
+     *
+     * @return {Object}
+     */
     getDefaultProps: function() {
         return {
             hideCompleted: false,
@@ -321,6 +418,11 @@ module.exports = React.createClass({displayName: 'exports',
         };
     },
 
+    /**
+     * Returns the initial state object for this component
+     *
+     * @return {Object}
+     */
     getInitialState: function() {
         return {
             hideCompleted: this.props.hideCompleted,
@@ -328,6 +430,11 @@ module.exports = React.createClass({displayName: 'exports',
         };
     },
 
+    /**
+     * Dispatches a filterTasks action and updates the state of the filters
+     *
+     * @param {Object} filters
+     */
     applyFilters: function(filters) {
         var newState = _.assign({}, this.state, filters);
 
@@ -335,24 +442,45 @@ module.exports = React.createClass({displayName: 'exports',
         this.setState(newState);
     },
 
-    handleShowCompletedChange: function() {
+    /**
+     * Applies a hideCompleted filter to the tasks list
+     *
+     * @return {void}
+     */
+    handleHideCompletedChange: function() {
         this.applyFilters({hideCompleted: !this.state.hideCompleted});
     },
 
+    /**
+     * Applies a text filter to the tasks with the text being entered by the user
+     *
+     * @param {SyntheticEvent} e
+     * @return {void}
+     */
     handleTextFilterChange: function(e) {
         this.applyFilters({byText: e.target.value});
     },
 
+    /**
+     * Resets the text filter
+     *
+     * @return {void}
+     */
     clearTextFilter: function() {
         this.applyFilters({byText: ''});
     },
 
+    /**
+     * Renders the content of the component and its children
+     *
+     * @return {XML}
+     */
     render: function() {
         return (
             React.createElement("header", null, 
                 React.createElement("label", null, 
                     React.createElement("input", {type: "checkbox", checked: this.state.hideCompleted, 
-                        onChange: this.handleShowCompletedChange}), "Hide completed"
+                        onChange: this.handleHideCompletedChange}), "Hide completed"
                 ), 
                 React.createElement("input", {type: "text", placeholder: "Filter tasks", value: this.state.byText, onChange: this.handleTextFilterChange}), 
                 React.createElement("button", {onClick: this.clearTextFilter}, "Clear")
@@ -367,30 +495,68 @@ var _ = require('lodash'),
     TaskItem = require('./TaskItem.jsx');
 
 module.exports = React.createClass({displayName: 'exports',
+    /**
+     * The components mixins
+     */
     mixins: [StoreMixin],
 
+    /**
+     * The components static properties
+     */
     statics: {
+        /**
+         * The lists of Stores that the components responds to
+         */
         storeListeners: ['TasksStore']
     },
 
+    /**
+     * Returns the initial state object for this component
+     *
+     * @return {Object}
+     */
     getInitialState: function() {
         return {
             tasks: []
         };
     },
 
+    /**
+     * This handlers gets executed from within by the StoreMixin whenever a store
+     * defined in the storeListeners static property emits that a change occurred.
+     *
+     * @param {TaskStore} tasksStore
+     * @return {void}
+     */
     onChange: function(tasksStore) {
         this.setState({ tasks: tasksStore.getAll() });
     },
 
+    /**
+     * Dispatches a updateTask action to the app instance
+     *
+     * @param {Object} task
+     * @return {void}
+     */
     saveItem: function(task) {
         this.props.app.executeAction('updateTask', task);
     },
 
+    /**
+     * Dispatches a removeTask action to the app instance
+     *
+     * @param {Object} task
+     * @return {void}
+     */
     removeItem: function(task) {
         this.props.app.executeAction('removeTask', task);
     },
 
+    /**
+     * Renders the content of the component and its children
+     *
+     * @return {XML}
+     */
     render: function() {
         var me = this,
             tasks = this.state.tasks;
@@ -26695,8 +26861,18 @@ var _ = require('lodash'),
     _tasks = [];
 
 module.exports = {
+    /**
+     * The services identifier
+     */
     name: 'TasksService',
 
+    /**
+     * Creates a task and adds it to the tasks list
+     *
+     * @param {Object} params
+     * @param {Function} callback
+     * @return {void}
+     */
     create: function(params, callback) {
         var newTask = {
             id: params.id,
@@ -26709,10 +26885,24 @@ module.exports = {
         callback(null, newTask);
     },
 
+    /**
+     * Retrieves the list of tasks
+     *
+     * @param {Object} params
+     * @param {Function} callback
+     * @return {void}
+     */
     read: function(params, callback) {
         callback(null, _tasks.concat());
     },
 
+    /**
+     * Updates a task content
+     *
+     * @param {Object} params
+     * @param {Function} callback
+     * @return {Object}
+     */
     update: function(params, callback) {
         var task = _.first(_tasks, {id : params.id});
 
@@ -26728,6 +26918,13 @@ module.exports = {
         callback(null, _.clone(task));
     },
 
+    /**
+     * Removes a task
+     *
+     * @param {Object} params
+     * @param {Function} callback
+     * @return {Object}
+     */
     remove: function(params, callback) {
         var removed = _.remove(_tasks, {id: params.id});
 
