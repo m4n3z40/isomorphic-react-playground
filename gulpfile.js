@@ -14,20 +14,16 @@ var env = process.env.NODE_ENV || 'development',
 	serverConf = require('./configs/server')[env];
 
 /**
- * Browserify transform
- * @type {*|exports}
- */
-var browserified = transform(function(filename) {
-	var b = browserify(filename);
-	b.transform(reactify, {extension: 'jsx'});
-	return b.bundle();
-});
-
-/**
  * Sets up browserify bundling for the development environment.
  * Bundles and creates a file at the scripts folder in the assets directory.
  */
 gulp.task('clientjs:dev', function() {
+	var browserified = transform(function(filename) {
+		var b = browserify(filename);
+		b.transform(reactify, {extension: 'jsx'});
+		return b.bundle();
+	});
+
 	return gulp.src(paths.source.clientMainScript)
 		.pipe(browserified)
 		.pipe(rename(paths.dist.clientMainScript))
@@ -39,6 +35,12 @@ gulp.task('clientjs:dev', function() {
  * Bundles, minify and creates a file at the scripts folder in the assets directory.
  */
 gulp.task('clientjs:prod', function() {
+	var browserified = transform(function(filename) {
+		var b = browserify(filename);
+		b.transform(reactify, {extension: 'jsx'});
+		return b.bundle();
+	});
+
 	return gulp.src(paths.source.clientMainScript)
 		.pipe(browserified)
 		.pipe(uglify())
