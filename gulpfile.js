@@ -1,6 +1,8 @@
 var env = process.env.NODE_ENV || 'development',
 	gulp = require('gulp'),
-	browserify = require('gulp-browserify'),
+	browserify = require('browserify'),
+	reactify = require('reactify'),
+	transform = require('vinyl-transform'),
 	nodemon = require('gulp-nodemon'),
 	livereload = require('gulp-livereload'),
 	stylus = require('gulp-stylus'),
@@ -12,15 +14,22 @@ var env = process.env.NODE_ENV || 'development',
 	serverConf = require('./configs/server')[env];
 
 /**
+ * Browserify transform
+ * @type {*|exports}
+ */
+var browserified = transform(function(filename) {
+	var b = browserify(filename);
+	b.transform(reactify, {extension: 'jsx'});
+	return b.bundle();
+});
+
+/**
  * Sets up browserify bundling for the development environment.
  * Bundles and creates a file at the scripts folder in the assets directory.
  */
 gulp.task('clientjs:dev', function() {
 	return gulp.src(paths.source.clientMainScript)
-		.pipe(browserify({
-			transform: ['reactify'],
-			extensions: ['.jsx']
-		}))
+		.pipe(browserified)
 		.pipe(rename(paths.dist.clientMainScript))
 		.pipe(gulp.dest(paths.dist.clientBundle));
 });
@@ -31,10 +40,7 @@ gulp.task('clientjs:dev', function() {
  */
 gulp.task('clientjs:prod', function() {
 	return gulp.src(paths.source.clientMainScript)
-		.pipe(browserify({
-			transform: ['reactify'],
-			extensions: ['.jsx']
-		}))
+		.pipe(browserified)
 		.pipe(uglify())
 		.pipe(rename(paths.dist.clientMainScript))
 		.pipe(gulp.dest(paths.dist.clientBundle));
