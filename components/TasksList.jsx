@@ -1,5 +1,6 @@
 var _ = require('lodash'),
     React = require('react'),
+    Hash = require('object-hash'),
     StoreMixin = require('../lib/mixins/store'),
     TaskItem = require('./TaskItem.jsx');
 
@@ -26,7 +27,7 @@ module.exports = React.createClass({
      */
     getInitialState: function() {
         return {
-            tasks: []
+            tasks: this.props.tasks
         };
     },
 
@@ -75,8 +76,10 @@ module.exports = React.createClass({
         return (
             <ol>
                 {_.map(tasks, function(task) {
-                    return <TaskItem key={task.id} task={task}
-                        handleSave={me.saveItem} handleRemove={me.removeItem} />;
+                    return <TaskItem key={Hash.MD5(task)}
+                                     task={task}
+                                     handleSave={me.saveItem}
+                                     handleRemove={me.removeItem} />;
                 })}
             </ol>
         );

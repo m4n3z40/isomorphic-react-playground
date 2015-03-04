@@ -1,3 +1,6 @@
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
+
 var React = require('react'),
     Application = require('./lib/core/application'),
     TaskStore = require('./stores/tasks'),
@@ -8,7 +11,7 @@ var app = new Application();
 
 app.setMainComponent(React.createFactory(mainComponent));
 
-app.addService(require('./services/tasks'));
+app.addService(require('./services/tasks')(app));
 
 app.addStore(new TaskStore());
 

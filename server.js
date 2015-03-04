@@ -6,7 +6,6 @@ var express = require('express');
 var app = require('./app');
 var React = require('react');
 var bodyParser = require('body-parser');
-var TasksApi = require('./api/tasks');
 
 //Creates the App instance on the server
 var serverApp = express();
@@ -24,7 +23,7 @@ serverApp.use(bodyParser.urlencoded({extended: true}));
 serverApp.use('/assets', express.static('assets'));
 
 //Configures the api routes
-serverApp.use('/api', TasksApi);
+serverApp.use('/api', require('./api/tasks'));
 
 //Gets the app config
 var appConfig = app.config('app');
@@ -34,11 +33,13 @@ var Main = app.getMainComponent();
 
 //Sets the default route handler
 serverApp.get('/', function(req, res) {
-    res.render('layouts/default', {
-        language: appConfig.defaultLanguage,
-        pageTitle: appConfig.siteTitle,
-        mainComponent: React.renderToString(Main({app: app, tasks: app.getStore('TasksStore').getAll()})),
-        state: JSON.stringify(app.saveState())
+    app.executeAction('showTasks', null, function() {
+        res.render('layouts/default', {
+            language: appConfig.defaultLanguage,
+            pageTitle: appConfig.siteTitle,
+            mainComponent: React.renderToString(Main({app: app, tasks: app.getStore('TasksStore').getAll()})),
+            state: JSON.stringify(app.saveState())
+        });
     });
 });
 

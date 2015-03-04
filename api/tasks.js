@@ -62,7 +62,7 @@ createTask('Go running.');
 
 //Configuring simple logger
 router.use(function(req, res, next) {
-    console.log('TODOS API REQUEST: %s %s %s', req.method, req.url, req.path);
+    console.log('TODOS API REQUEST: %s %s', req.method, req.path);
     next();
 });
 

@@ -20,7 +20,7 @@ module.exports = React.createClass({
     getInitialState: function() {
         var task = this.props.task;
 
-        return {text: task.text, editing: task.editing};
+        return {text: task.text, editing: task.editing, completed: task.completed};
     },
 
     /**
@@ -41,12 +41,9 @@ module.exports = React.createClass({
      */
     saveTask: function() {
         if(this.props.handleSave) {
-            var task = this.props.task;
-
             this.props.handleSave({
-                id: task.id,
-                text: this.state.text,
-                editing: false
+                id: this.props.task.id,
+                text: this.state.text
             });
         }
     },
@@ -117,10 +114,10 @@ module.exports = React.createClass({
      * @return {XML}
      */
     render: function() {
-        var task = this.props.task,
+        var task = this.state,
             completed = task.completed,
             editing = task.editing,
-            text = this.state.text,
+            text = task.text,
             buttons = [],
             taskContent;
 

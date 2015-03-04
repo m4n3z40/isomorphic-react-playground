@@ -19,7 +19,7 @@ function createTask(app, payload, callback) {
             return callback && callback(error);
         }
 
-        app.emit(TasksContants.CREATE_SUCCESS, created);
+        app.emit(TasksContants.CREATE_SUCCESS, created.id);
         callback && callback(null, created);
     });
 }

@@ -21,6 +21,7 @@ module.exports = Store.extend({
 
         handlers[TasksContants.RETRIEVE_SUCCESS] = '_onRetrieveSuccess';
         handlers[TasksContants.CREATE_START] = '_onCreateStart';
+        handlers[TasksContants.CREATE_SUCCESS] = '_onCreateSuccess';
         handlers[TasksContants.CREATE_ERROR] = '_onCreateError';
         handlers[TasksContants.UPDATE_START] = '_onUpdateStart';
         handlers[TasksContants.UPDATE_ERROR] = '_onUpdateError';
@@ -49,7 +50,7 @@ module.exports = Store.extend({
      */
     createTask: function(task) {
         return {
-            id: 'tsk_' + (new Date()).valueOf(),
+            id: 'pending',
             completed: false,
             editing: false,
             text: task
@@ -119,6 +120,21 @@ module.exports = Store.extend({
      */
     _onCreateStart: function(task) {
         this.tasks.push(task);
+
+        this.emitChanges();
+    },
+
+    /**
+     * Handler for when the create_success action is executed
+     *
+     * @param {string} newID
+     * @return {void}
+     * @private
+     */
+    _onCreateSuccess: function(newID) {
+        var taskIndex = _.findIndex(this.tasks, {'id': 'pending'});
+
+        this.tasks[taskIndex].id = newID;
 
         this.emitChanges();
     },
