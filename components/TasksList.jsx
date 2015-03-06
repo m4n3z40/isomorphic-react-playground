@@ -1,6 +1,5 @@
 var _ = require('lodash'),
     React = require('react'),
-    Hash = require('object-hash'),
     StoreMixin = require('../lib/mixins/store'),
     TaskItem = require('./TaskItem.jsx');
 
@@ -74,14 +73,14 @@ module.exports = React.createClass({
         if (tasks.length === 0) return <h3>No tasks. Just hanging.</h3>;
 
         return (
-            <ol>
+            <ul>
                 {_.map(tasks, function(task) {
-                    return <TaskItem key={Hash.MD5(task)}
+                    return <TaskItem key={task.id}
                                      task={task}
-                                     handleSave={me.saveItem}
-                                     handleRemove={me.removeItem} />;
+                                     onSave={me.saveItem}
+                                     onRemove={me.removeItem} />;
                 })}
-            </ol>
+            </ul>
         );
     }
 });

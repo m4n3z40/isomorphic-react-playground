@@ -1,26 +1,33 @@
-var React = require('react');
+var React = require('react/addons');
 
 var ENTER_KEY = 13;
 
 module.exports = React.createClass({
+    mixins: [React.addons.PureRenderMixin],
+
     /**
      * Returns the initial props for this component
      *
      * @return {Object}
      */
     getDefaultProps: function() {
-        return {task: null};
+        function emptyFn(){}
+
+        return {
+            task: null,
+            onSave: emptyFn,
+            onRemove: emptyFn
+        };
     },
 
     /**
-     * Returns the initial state object for this component
-     *
-     * @return {Object}
+     * @lifecycle
+     * @return {void}
      */
-    getInitialState: function() {
-        var task = this.props.task;
-
-        return {text: task.text, editing: task.editing, completed: task.completed};
+    componentDidUpdate: function() {
+        if (this.props.task.editing) {
+            this.refs.txtTask.getDOMNode().select();
+        }
     },
 
     /**
@@ -29,9 +36,7 @@ module.exports = React.createClass({
      * @return {void}
      */
     removeTask: function() {
-        if (this.props.handleRemove) {
-            this.props.handleRemove(this.props.task);
-        }
+        this.props.onRemove(this.props.task);
     },
 
     /**
@@ -40,12 +45,11 @@ module.exports = React.createClass({
      * @return {void}
      */
     saveTask: function() {
-        if(this.props.handleSave) {
-            this.props.handleSave({
-                id: this.props.task.id,
-                text: this.state.text
-            });
-        }
+        this.props.onSave({
+            id: this.props.task.id,
+            text: this.refs.txtTask.getDOMNode().value,
+            editing: false
+        });
     },
 
     /**
@@ -54,14 +58,12 @@ module.exports = React.createClass({
      * @return {void}
      */
     completeTask: function() {
-        if(this.props.handleSave) {
-            var task = this.props.task;
+        var task = this.props.task;
 
-            this.props.handleSave({
-                id: task.id,
-                completed: !task.completed
-            });
-        }
+        this.props.onSave({
+            id: task.id,
+            completed: !task.completed
+        });
     },
 
     /**
@@ -70,17 +72,10 @@ module.exports = React.createClass({
      * @return {void}
      */
     editTask: function() {
-        this.setState({editing: true});
-    },
-
-    /**
-     * Updates the text for state with the text being entered by the user
-     *
-     * @param {SyntheticEvent} e
-     * @return {void}
-     */
-    handleEditFieldChange: function(e) {
-        this.setState({text: e.target.value});
+        this.props.onSave({
+            id: this.props.task.id,
+            editing: true
+        });
     },
 
     /**
@@ -101,11 +96,10 @@ module.exports = React.createClass({
      * @return {void}
      */
     handleCancelEditing: function() {
-        var task = this.props.task;
-
-        task.editing = false;
-
-        this.setState({text: task.text, editing: false});
+        this.props.onSave({
+            id: this.props.task.id,
+            editing: false
+        });
     },
 
     /**
@@ -114,7 +108,7 @@ module.exports = React.createClass({
      * @return {XML}
      */
     render: function() {
-        var task = this.state,
+        var task = this.props.task,
             completed = task.completed,
             editing = task.editing,
             text = task.text,
@@ -122,7 +116,7 @@ module.exports = React.createClass({
             taskContent;
 
         if (editing) {
-            taskContent = <input type="text" value={text} onChange={this.handleEditFieldChange} onKeyDown={this.handleEditFieldKeyDown}  />;
+            taskContent = <input type="text" ref="txtTask" defaultValue={text} onKeyDown={this.handleEditFieldKeyDown}  />;
             buttons.push(<button key="cancel" onClick={this.handleCancelEditing}>Cancel</button>);
             buttons.push(<button key="save" onClick={this.saveTask}>Save</button>);
         } else {

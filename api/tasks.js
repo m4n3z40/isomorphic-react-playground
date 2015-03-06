@@ -36,6 +36,8 @@ function createTask(text) {
 function updateTask(id, data) {
     var task = _.find(tasks, {id: id});
 
+    delete data['editing'];
+
     if (task) {
         _.assign(task, data);
 

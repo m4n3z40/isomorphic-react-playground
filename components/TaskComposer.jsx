@@ -13,15 +13,6 @@ module.exports = React.createClass({
     },
 
     /**
-     * Returns the initial state object for this component
-     *
-     * @return {Object}
-     */
-    getInitialState: function() {
-        return {value: ''};
-    },
-
-    /**
      * Checks if the Enter key has been pressed and creates a task if it has
      *
      * @param {SyntheticEvent} e
@@ -34,24 +25,16 @@ module.exports = React.createClass({
     },
 
     /**
-     * Changes the state value whenever the text in the input changes
-     *
-     * @param {SyntheticEvent} e
-     * @return {void}
-     */
-    handleTextChange: function(e) {
-        this.setState({value: e.target.value});
-    },
-
-    /**
      * Dispatches an action for crating a task and resets the state value
      *
      * @return {void}
      */
     createTask: function() {
-        this.props.app.executeAction('createTask', this.state.value);
+        var input = this.refs.txtTask.getDOMNode();
 
-        this.setState({value: ''});
+        this.props.app.executeAction('createTask', input.value);
+
+        input.value = '';
     },
 
     /**
@@ -62,9 +45,7 @@ module.exports = React.createClass({
     render: function() {
         return (
             <footer>
-                <input type="text" placeholder={this.props.placeholder} value={this.state.value}
-                    onChange={this.handleTextChange}
-                    onKeyUp={this.handleKeyDown} />
+                <input type="text" ref="txtTask" placeholder={this.props.placeholder} onKeyUp={this.handleKeyDown} />
                 <button onClick={this.createTask}>Add task</button>
             </footer>
         );

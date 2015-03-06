@@ -34,8 +34,8 @@
     "jade": "^1.8.1",
     "lodash": "^2.4.1",
     "node-jsx": "^0.12.4",
-    "object-hash": "^0.5.0",
-    "react": "^0.12.1"
+    "react": "^0.12.1",
+    "react-router": "^0.12.4"
   },
   "devDependencies": {
     "browserify": "^7.0.3",
