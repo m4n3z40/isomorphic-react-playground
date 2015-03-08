@@ -4,7 +4,7 @@ html(lang="#{language}")
       title= pageTitle
       link(rel="stylesheet" href="assets/css/app.css")
    body
-      #reactRoot!= mainComponent
+      #reactRoot!= content
 
       script.
          window.__serverState = !{state};

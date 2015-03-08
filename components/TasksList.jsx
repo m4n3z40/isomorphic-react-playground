@@ -25,9 +25,7 @@ module.exports = React.createClass({
      * @return {Object}
      */
     getInitialState: function() {
-        return {
-            tasks: this.props.tasks
-        };
+        return {tasks: this.getStore('TasksStore').getAll()};
     },
 
     /**

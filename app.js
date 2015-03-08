@@ -1,20 +1,23 @@
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
-var React = require('react'),
-    Application = require('./lib/core/application'),
+var Application = require('./lib/core/application'),
     TaskStore = require('./stores/tasks'),
-    mainComponent = require('./components/Main.jsx');
+    routes = require('./routes.jsx');
 
 //This will be de app instance, available everywhere
 var app = new Application();
 
-app.setMainComponent(React.createFactory(mainComponent));
+//Setting the routes
+app.setRoutes(routes);
 
+//Adding the app services
 app.addService(require('./services/tasks')(app));
 
+//Adding the app stores
 app.addStore(new TaskStore());
 
+//Adding the app actions
 app.addAction(require('./actions/createTask'));
 app.addAction(require('./actions/removeTask'));
 app.addAction(require('./actions/updateTask'));

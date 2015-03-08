@@ -11,6 +11,11 @@ var TasksContants = require('../constants/tasks');
 function updateTask(app, payload, callback) {
     app.emit(TasksContants.UPDATE_START, payload);
 
+    //Se não houver modificado o texto ou estado de completo, não chamar a API
+    if (!payload.text && (typeof payload.completed === 'undefined')) {
+        return;
+    }
+
     app.getService('TasksService').update(payload, function(error, updated) {
         if (error) {
             app.emit(TasksContants.UPDATE_ERROR, error);

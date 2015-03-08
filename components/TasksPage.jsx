@@ -10,11 +10,7 @@ module.exports = React.createClass({
      * @return {Object}
      */
     getDefaultProps: function() {
-        return {
-            app: null,
-            tasks: [],
-            filters: null
-        }
+        return { app: null };
     },
 
     /**
