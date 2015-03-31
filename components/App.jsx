@@ -10,7 +10,7 @@ module.exports = React.createClass({
                 <header>
                     <ul>
                         <li><Link to="app">Tasks</Link></li>
-                        <li><Link to="tweets">Tweets</Link></li>
+                        <li><Link to="hotel-urbano">Hotel Urbano Packages</Link></li>
                         <li><Link to="hackernews">Hacker News</Link></li>
                     </ul>
                 </header>

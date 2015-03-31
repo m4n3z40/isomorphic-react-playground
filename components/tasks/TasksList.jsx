@@ -1,6 +1,6 @@
 var _ = require('lodash'),
     React = require('react'),
-    StoreMixin = require('../lib/mixins/store'),
+    StoreMixin = require('../../lib/mixins/store'),
     TaskItem = require('./TaskItem.jsx');
 
 module.exports = React.createClass({

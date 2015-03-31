@@ -3,7 +3,7 @@ var React = require('react');
 module.exports = React.createClass({
     render: function() {
         return (
-            <div>Tweets page. (Comming soon)</div>
+            <div>Hotel Urbano page. (Comming soon)</div>
         );
     }
 });

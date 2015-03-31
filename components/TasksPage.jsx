@@ -1,7 +1,7 @@
 var React = require('react'),
-    TasksFilter = require('./TasksFilter.jsx'),
-    TasksList = require('./TasksList.jsx'),
-    TaskComposer = require('./TaskComposer.jsx');
+    TasksFilter = require('./tasks/TasksFilter.jsx'),
+    TasksList = require('./tasks/TasksList.jsx'),
+    TaskComposer = require('./tasks/TaskComposer.jsx');
 
 module.exports = React.createClass({
     /**

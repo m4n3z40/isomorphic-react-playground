@@ -175,7 +175,7 @@ module.exports = React.createClass({displayName: "exports",
                 React.createElement("header", null, 
                     React.createElement("ul", null, 
                         React.createElement("li", null, React.createElement(Link, {to: "app"}, "Tasks")), 
-                        React.createElement("li", null, React.createElement(Link, {to: "tweets"}, "Tweets")), 
+                        React.createElement("li", null, React.createElement(Link, {to: "hotel-urbano"}, "Hotel Urbano Packages")), 
                         React.createElement("li", null, React.createElement(Link, {to: "hackernews"}, "Hacker News"))
                     )
                 ), 
@@ -195,6 +195,49 @@ module.exports = React.createClass({displayName: "exports",
     }
 });
 },{"react":234}],10:[function(require,module,exports){
+var React = require('react');
+
+module.exports = React.createClass({displayName: "exports",
+    render: function() {
+        return (
+            React.createElement("div", null, "Hotel Urbano page. (Comming soon)")
+        );
+    }
+});
+},{"react":234}],11:[function(require,module,exports){
+var React = require('react'),
+    TasksFilter = require('./tasks/TasksFilter.jsx'),
+    TasksList = require('./tasks/TasksList.jsx'),
+    TaskComposer = require('./tasks/TaskComposer.jsx');
+
+module.exports = React.createClass({displayName: "exports",
+    /**
+     * Returns the default props for this Component
+     *
+     * @return {Object}
+     */
+    getDefaultProps: function() {
+        return { app: null };
+    },
+
+    /**
+     * Renders the content of the component and its children
+     *
+     * @return {XML}
+     */
+    render: function() {
+        var props = this.props;
+
+        return (
+            React.createElement("div", null, 
+                React.createElement(TasksFilter, React.__spread({},  props)), 
+                React.createElement(TasksList, React.__spread({},  props)), 
+                React.createElement(TaskComposer, React.__spread({},  props))
+            )
+        );
+    }
+});
+},{"./tasks/TaskComposer.jsx":12,"./tasks/TasksFilter.jsx":14,"./tasks/TasksList.jsx":15,"react":234}],12:[function(require,module,exports){
 var React = require('react');
 
 var ENTER_KEY = 13;
@@ -248,7 +291,7 @@ module.exports = React.createClass({displayName: "exports",
         );
     }
 });
-},{"react":234}],11:[function(require,module,exports){
+},{"react":234}],13:[function(require,module,exports){
 var React = require('react/addons');
 
 var ENTER_KEY = 13;
@@ -388,7 +431,7 @@ module.exports = React.createClass({displayName: "exports",
         );
     }
 });
-},{"react/addons":73}],12:[function(require,module,exports){
+},{"react/addons":73}],14:[function(require,module,exports){
 var React = require('react'),
     _ = require('lodash');
 
@@ -475,10 +518,10 @@ module.exports = React.createClass({displayName: "exports",
         );
     }
 });
-},{"lodash":32,"react":234}],13:[function(require,module,exports){
+},{"lodash":32,"react":234}],15:[function(require,module,exports){
 var _ = require('lodash'),
     React = require('react'),
-    StoreMixin = require('../lib/mixins/store'),
+    StoreMixin = require('../../lib/mixins/store'),
     TaskItem = require('./TaskItem.jsx');
 
 module.exports = React.createClass({displayName: "exports",
@@ -560,50 +603,7 @@ module.exports = React.createClass({displayName: "exports",
         );
     }
 });
-},{"../lib/mixins/store":27,"./TaskItem.jsx":11,"lodash":32,"react":234}],14:[function(require,module,exports){
-var React = require('react'),
-    TasksFilter = require('./TasksFilter.jsx'),
-    TasksList = require('./TasksList.jsx'),
-    TaskComposer = require('./TaskComposer.jsx');
-
-module.exports = React.createClass({displayName: "exports",
-    /**
-     * Returns the default props for this Component
-     *
-     * @return {Object}
-     */
-    getDefaultProps: function() {
-        return { app: null };
-    },
-
-    /**
-     * Renders the content of the component and its children
-     *
-     * @return {XML}
-     */
-    render: function() {
-        var props = this.props;
-
-        return (
-            React.createElement("div", null, 
-                React.createElement(TasksFilter, React.__spread({},  props)), 
-                React.createElement(TasksList, React.__spread({},  props)), 
-                React.createElement(TaskComposer, React.__spread({},  props))
-            )
-        );
-    }
-});
-},{"./TaskComposer.jsx":10,"./TasksFilter.jsx":12,"./TasksList.jsx":13,"react":234}],15:[function(require,module,exports){
-var React = require('react');
-
-module.exports = React.createClass({displayName: "exports",
-    render: function() {
-        return (
-            React.createElement("div", null, "Tweets page. (Comming soon)")
-        );
-    }
-});
-},{"react":234}],16:[function(require,module,exports){
+},{"../../lib/mixins/store":27,"./TaskItem.jsx":13,"lodash":32,"react":234}],16:[function(require,module,exports){
 var _ = require('lodash');
 
 var defaults = {
@@ -32790,7 +32790,7 @@ var React = require('react'),
     Router = require('react-router'),
     App = require('./components/App.jsx'),
     TasksPage = require('./components/TasksPage.jsx'),
-    TweetsPage = require('./components/TweetsPage.jsx'),
+    HotelUrbanoPage = require('./components/HotellUrbanoPage.jsx'),
     HackerNewsPage = require('./components/HackerNewsPage.jsx'),
     Route = Router.Route,
     NotFoundRoute = Router.NotFoundRoute,
@@ -32799,11 +32799,11 @@ var React = require('react'),
 module.exports = (
     React.createElement(Route, {name: "app", path: "/", handler: App}, 
         React.createElement(DefaultRoute, {handler: TasksPage}), 
-        React.createElement(Route, {name: "tweets", path: "tweets", handler: TweetsPage}), 
+        React.createElement(Route, {name: "hotel-urbano", path: "hotel-urbano", handler: HotelUrbanoPage}), 
         React.createElement(Route, {name: "hackernews", path: "hackernews", handler: HackerNewsPage})
     )
 );
-},{"./components/App.jsx":8,"./components/HackerNewsPage.jsx":9,"./components/TasksPage.jsx":14,"./components/TweetsPage.jsx":15,"react":234,"react-router":60}],236:[function(require,module,exports){
+},{"./components/App.jsx":8,"./components/HackerNewsPage.jsx":9,"./components/HotellUrbanoPage.jsx":10,"./components/TasksPage.jsx":11,"react":234,"react-router":60}],236:[function(require,module,exports){
 var defaultRequestHeader = {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
