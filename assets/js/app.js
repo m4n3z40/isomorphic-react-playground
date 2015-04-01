@@ -191,6 +191,12 @@ app.renderClient(document.getElementById('reactRoot'));
 var React = require('react'),
     HackerNewsList = require('./hackernews/HackerNewsList.jsx');
 
+var initialParams = {
+    page: 0,
+    tags: 'story',
+    query: 'react'
+};
+
 module.exports = function(App) {
     return React.createClass({
         /**
@@ -211,7 +217,7 @@ module.exports = function(App) {
                     return callback();
                 }
 
-                App.executeAction('searchHackerNews', {page: 0, tags: 'story'}, callback);
+                App.executeAction('searchHackerNews', initialParams, callback);
             }
         },
 
@@ -230,12 +236,7 @@ module.exports = function(App) {
          * @return {Object}
          */
         getInitialState: function () {
-            return {
-                params: {
-                    page: 0,
-                    tags: 'story'
-                }
-            };
+            return {params: initialParams};
         },
 
         /**
