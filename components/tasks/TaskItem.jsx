@@ -3,6 +3,9 @@ var React = require('react/addons');
 var ENTER_KEY = 13;
 
 module.exports = React.createClass({
+    /**
+     * Components mixins
+     */
     mixins: [React.addons.PureRenderMixin],
 
     /**

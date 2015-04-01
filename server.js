@@ -27,39 +27,16 @@ serverApp.use('/api', require('./api/tasks'));
 //Gets the app config
 var appConfig = app.config('app');
 
-/**
- * The server render callback
- *
- * @param {Object} response
- * @return {Function}
- */
-function render(response) {
-    return function(content) {
-        response.render('layouts/default', {
+//Sets the default route handler
+serverApp.get('*', function(req, res) {
+    app.renderServer(req.url, null, function(content) {
+        res.render('layouts/default', {
             language: appConfig.defaultLanguage,
             pageTitle: appConfig.siteTitle,
             content: content,
             state: JSON.stringify(app.saveState())
         });
-    }
-}
-
-/**
- * Callback that handles the retrieving of tasks
- *
- * @param {Object} request
- * @param {Object} response
- * @return {Function}
- */
-function onFinishedRetrievingTasks(request, response) {
-    return function(tasks) {
-        app.renderServer(request.url, {app: app}, render(response));
-    };
-}
-
-//Sets the default route handler
-serverApp.get('*', function(req, res) {
-    app.executeAction('showTasks', null, onFinishedRetrievingTasks(req, res));
+    });
 });
 
 //Gets the server config

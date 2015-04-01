@@ -1,4 +1,4 @@
-var TasksContants = require('../constants/tasks');
+var TasksContants = require('../../constants/tasks');
 
 /**
  * Emits a filter action
@@ -8,8 +8,6 @@ var TasksContants = require('../constants/tasks');
  * @param {Function} callback
  * @return {void}
  */
-function filterTasks(app, payload, callback) {
+module.exports = function filterTasks(app, payload, callback) {
     app.emit(TasksContants.FILTER, payload);
-}
-
-module.exports = filterTasks;
+};

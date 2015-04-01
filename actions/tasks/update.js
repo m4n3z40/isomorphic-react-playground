@@ -1,4 +1,4 @@
-var TasksContants = require('../constants/tasks');
+var TasksContants = require('../../constants/tasks');
 
 /**
  * Updates a task and emits all events regarding its update
@@ -8,7 +8,7 @@ var TasksContants = require('../constants/tasks');
  * @param {Function} callback
  * @return {void}
  */
-function updateTask(app, payload, callback) {
+module.exports = function updateTask(app, payload, callback) {
     app.emit(TasksContants.UPDATE_START, payload);
 
     //Se não houver modificado o texto ou estado de completo, não chamar a API
@@ -25,6 +25,4 @@ function updateTask(app, payload, callback) {
         app.emit(TasksContants.UPDATE_SUCCESS, updated);
         callback && callback(null, updated);
     });
-}
-
-module.exports = updateTask;
+};

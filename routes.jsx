@@ -1,17 +1,19 @@
 var React = require('react'),
     Router = require('react-router'),
-    App = require('./components/App.jsx'),
-    TasksPage = require('./components/TasksPage.jsx'),
-    HotelUrbanoPage = require('./components/HotellUrbanoPage.jsx'),
-    HackerNewsPage = require('./components/HackerNewsPage.jsx'),
+    RootPage = require('./components/RootPage.jsx'),
     Route = Router.Route,
-    NotFoundRoute = Router.NotFoundRoute,
     DefaultRoute = Router.DefaultRoute;
 
-module.exports = (
-    <Route name="app" path="/" handler={App}>
-        <DefaultRoute handler={TasksPage}/>
-        <Route name="hotel-urbano" path="hotel-urbano" handler={HotelUrbanoPage}/>
-        <Route name="hackernews" path="hackernews" handler={HackerNewsPage}/>
-    </Route>
-);
+module.exports = function(App) {
+    var TasksPage = require('./components/TasksPage.jsx')(App),
+        HotelUrbanoPage = require('./components/HotellUrbanoPage.jsx')(App),
+        HackerNewsPage = require('./components/HackerNewsPage.jsx')(App);
+
+    return (
+        <Route name="app" path="/" handler={RootPage}>
+            <DefaultRoute handler={TasksPage}/>
+            <Route name="hotel-urbano" path="hotel-urbano" handler={HotelUrbanoPage}/>
+            <Route name="hackernews" path="hackernews" handler={HackerNewsPage}/>
+        </Route>
+    );
+};

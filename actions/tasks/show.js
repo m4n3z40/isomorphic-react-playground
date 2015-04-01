@@ -1,4 +1,4 @@
-var TasksContants = require('../constants/tasks');
+var TasksContants = require('../../constants/tasks');
 
 /**
  * Retrieves all tasks and emits all events regarding showing
@@ -8,7 +8,7 @@ var TasksContants = require('../constants/tasks');
  * @param {Function} callback
  * @return {void}
  */
-function showTasks(app, payload, callback) {
+module.exports = function showTasks(app, payload, callback) {
     app.emit(TasksContants.RETRIEVE_START, payload);
 
     app.getService('TasksService').read(null, function(error, tasks) {
@@ -20,6 +20,4 @@ function showTasks(app, payload, callback) {
         app.emit(TasksContants.RETRIEVE_SUCCESS, tasks);
         callback && callback(null, tasks);
     });
-}
-
-module.exports = showTasks;
+};
