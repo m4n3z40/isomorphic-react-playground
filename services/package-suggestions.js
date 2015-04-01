@@ -6,7 +6,7 @@
  * @return {void}
  */
 function search(params, callback) {
-    var url = this.config('urls').hackernewsApiBase + 'search';
+    var url = this.config('urls').huApiBase + 'packages/suggestion';
 
     if (params && (typeof params === 'object')) {
         url += '?' + this.util('url').serialize(params);
@@ -33,7 +33,7 @@ module.exports = function(app) {
         /**
          * The services identifier
          */
-        name: 'HackernewsService',
+        name: 'PackageSuggestionsService',
 
         /**
          * Bind this on the search operation to the app instance

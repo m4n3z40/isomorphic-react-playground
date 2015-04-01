@@ -4,35 +4,17 @@ var defaultRequestHeader = {
     };
 
 /**
- * Handles the response
+ * Parses the response data and throws any encountered errors
  *
- * @param {Function} callback
+ * @param {Object} responseObj
  * @return {Function}
  */
-function handleResponse(callback) {
-    return function(response) {
-        if (response.status != 200) {
-            callback(new Error('Bad response from server'));
-        }
+function parseContent(responseObj) {
+    if (responseObj.code != 200) {
+        throw new Error(responseObj.message);
+    }
 
-        return response.json();
-    };
-}
-
-/**
- * Parses the response data and handles errors
- *
- * @param {Function} callback
- * @return {Function}
- */
-function handleErrors(callback) {
-    return function(responseObj) {
-        if (responseObj.code != 200) {
-            callback(new Error(responseObj.message));
-        }
-
-        return responseObj.content;
-    };
+    return responseObj.content;
 }
 
 /**
@@ -51,13 +33,14 @@ function create(params, callback) {
         body: JSON.stringify(params)
     })
 
-    .then(handleResponse(callback))
+    .then(this.util('response').parseJson)
 
-    .then(handleErrors(callback))
+    .then(parseContent, callback)
 
-    .then(function(newTask) {
-        callback(null, newTask);
-    });
+    .then(
+        function(newTask) { callback(null, newTask); },
+        callback
+    );
 }
 
 /**
@@ -72,13 +55,14 @@ function read(params, callback) {
 
     fetch(urls.apiBase + 'tasks')
 
-    .then(handleResponse(callback))
+    .then(this.util('response').parseJson)
 
-    .then(handleErrors(callback))
+    .then(parseContent, callback)
 
-    .then(function(tasks) {
-        callback(null, tasks);
-    });
+    .then(
+        function(tasks) { callback(null, tasks); },
+        callback
+    );
 }
 
 /**
@@ -97,13 +81,14 @@ function update(params, callback) {
         body: JSON.stringify(params)
     })
 
-    .then(handleResponse(callback))
+    .then(this.util('response').parseJson)
 
-    .then(handleErrors(callback))
+    .then(parseContent, callback)
 
-    .then(function(task) {
-        callback(null, task);
-    });
+    .then(
+        function(task) { callback(null, task); },
+        callback
+    );
 }
 
 /**
@@ -120,13 +105,14 @@ function remove(params, callback) {
         method: 'delete'
     })
 
-    .then(handleResponse(callback))
+    .then(this.util('response').parseJson)
 
-    .then(handleErrors(callback))
+    .then(parseContent, callback)
 
-    .then(function(task) {
-        callback(null, task);
-    });
+    .then(
+        function(task) { callback(null, task); },
+        callback
+    );
 }
 
 /**

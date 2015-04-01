@@ -45,8 +45,7 @@ module.exports = React.createClass({
          * @return {XML}
          */
         render: function () {
-            var me = this,
-                hackerNews = this.state.hackernews;
+            var hackerNews = this.state.hackernews;
 
             if (hackerNews.length === 0) return <h3>No hackerNews. Just hanging.</h3>;
 
