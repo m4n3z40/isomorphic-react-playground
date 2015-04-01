@@ -3,7 +3,6 @@ require('node-jsx').install({extension: '.jsx'});
 
 //Dependencies
 var express = require('express');
-var app = require('./app');
 var bodyParser = require('body-parser');
 
 //Creates the App instance on the server
@@ -24,23 +23,35 @@ serverApp.use('/assets', express.static('assets'));
 //Configures the api routes
 serverApp.use('/api', require('./api/tasks'));
 
-//Gets the app config
-var appConfig = app.config('app');
+//Respondes the favicon icon, cannot let react router handle this
+serverApp.get('/favicon.ico', function(req, res) {
+    //TODO: get a favicon to work
+    res.status(404).end();
+});
+
+//Gets app module
+var app = require('./app');
 
 //Sets the default route handler
 serverApp.get('*', function(req, res) {
-    app.renderServer(req.url, null, function(content) {
+    //Instatiates and configure application for each session
+    var App = app();
+
+    //Gets the app config
+    var appConfig = App.config('app');
+
+    App.renderServer(req.url, null, function(content) {
         res.render('layouts/default', {
             language: appConfig.defaultLanguage,
             pageTitle: appConfig.siteTitle,
             content: content,
-            state: JSON.stringify(app.saveState())
+            state: JSON.stringify(App.saveState())
         });
     });
 });
 
 //Gets the server config
-var serverConfig = app.config('server');
+var serverConfig = require('./configs/server')[process.env.NODE_ENV || 'development'];
 
 //Start the server
 var server = serverApp.listen(serverConfig.port, serverConfig.address, function() {

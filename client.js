@@ -1,4 +1,5 @@
-var app = require('./app');
+//Instatiates and configure application
+var app = require('./app')();
 
 app.restoreState(window.__serverState);
 

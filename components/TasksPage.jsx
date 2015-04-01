@@ -23,7 +23,7 @@ module.exports = function(App) {
                     return callback();
                 }
 
-                App.executeAction('showTasks', {page: 0, tags: 'story'}, callback);
+                App.executeAction('showTasks', null, callback);
             }
         },
 
