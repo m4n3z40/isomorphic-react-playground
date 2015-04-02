@@ -1,5 +1,5 @@
-nextgen-stater-project
-======================
+isomorphic-react-playground
+===========================
 
-A stater kit for Apps prepared for the future.
-----------------------------------------------
+A React based isomorphic javascript starter project.
+----------------------------------------------------

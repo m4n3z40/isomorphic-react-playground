@@ -1,7 +1,7 @@
 {
   "name": "nextgen-stater-project",
   "version": "0.0.0",
-  "description": "A stater kit for Apps prepared for the future.",
+  "description": "A React based isomorphic javascript starter project.",
   "author": "Allan Marques Baptista <allan.marques@ymail.com>",
   "contributors": [],
   "scripts": {
@@ -11,10 +11,10 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/m4n3z40/nextgen-stater-project"
+    "url": "https://github.com/m4n3z40/isomorphic-react-playground"
   },
   "bugs": {
-    "url": "https://github.com/m4n3z40/nextgen-stater-project/issues"
+    "url": "https://github.com/m4n3z40/isomorphic-react-playground/issues"
   },
   "keywords": [
     "React",
