@@ -1,12 +1,1 @@
-body {
-  background: #eee;
-}
-h3 {
-  color: #00f;
-}
-.hidden {
-  display: none;
-}
-.done label {
-  text-decoration: line-through;
-}
+body{background:#eee}h3{color:#00f}.hidden{display:none}.done label{text-decoration:line-through}

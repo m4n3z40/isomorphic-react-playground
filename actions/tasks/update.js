@@ -8,7 +8,7 @@ var TasksContants = require('../../constants/tasks');
  * @param {Function} callback
  * @return {void}
  */
-module.exports = function updateTask(app, payload, callback) {
+var updateTask = module.exports = function(app, payload, callback) {
     app.emit(TasksContants.UPDATE_START, payload);
 
     //Se não houver modificado o texto ou estado de completo, não chamar a API
@@ -26,3 +26,5 @@ module.exports = function updateTask(app, payload, callback) {
         callback && callback(null, updated);
     });
 };
+
+updateTask.identifier = 'updateTask';

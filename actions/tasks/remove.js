@@ -8,7 +8,7 @@ var TasksContants = require('../../constants/tasks');
  * @param {Function} callback
  * @return {void}
  */
-module.exports = function removeTask(app, payload, callback) {
+var removeTask = module.exports = function(app, payload, callback) {
     app.emit(TasksContants.DESTROY_START, payload);
 
     app.getService('TasksService').remove(payload, function(error, removed) {
@@ -21,3 +21,5 @@ module.exports = function removeTask(app, payload, callback) {
         callback && callback(null, removed);
     });
 };
+
+removeTask.identifier = 'removeTask';

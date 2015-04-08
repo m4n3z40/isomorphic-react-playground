@@ -8,7 +8,7 @@ var TasksContants = require('../../constants/tasks');
  * @param {Function} callback
  * @return {void}
  */
-module.exports = function createTask(app, payload, callback) {
+var createTask = module.exports = function(app, payload, callback) {
     var task = app.getStore('TasksStore').createTask(payload);
 
     app.emit(TasksContants.CREATE_START, task);
@@ -23,3 +23,5 @@ module.exports = function createTask(app, payload, callback) {
         callback && callback(null, created);
     });
 };
+
+createTask.identifier = 'createTask';

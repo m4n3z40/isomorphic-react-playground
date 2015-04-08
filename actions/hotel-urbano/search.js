@@ -7,7 +7,7 @@ var PackageSuggestionsConstants = require('../../constants/package-suggestions')
  * @param {Object} payload
  * @param {Function} callback
  */
-module.exports = function searchHotelUrbano(app, payload, callback) {
+var searchHotelUrbano = module.exports = function(app, payload, callback) {
     app.emit(PackageSuggestionsConstants.SEARCH_START, payload);
 
     app.getService('PackageSuggestionsService').search(payload, function(error, response) {
@@ -20,3 +20,5 @@ module.exports = function searchHotelUrbano(app, payload, callback) {
         callback && callback(null, response);
     });
 };
+
+searchHotelUrbano.identifier = 'searchHotelUrbano';

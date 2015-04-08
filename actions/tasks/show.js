@@ -8,7 +8,7 @@ var TasksContants = require('../../constants/tasks');
  * @param {Function} callback
  * @return {void}
  */
-module.exports = function showTasks(app, payload, callback) {
+var showTasks = module.exports = function(app, payload, callback) {
     app.emit(TasksContants.RETRIEVE_START, payload);
 
     app.getService('TasksService').read(payload, function(error, tasks) {
@@ -21,3 +21,5 @@ module.exports = function showTasks(app, payload, callback) {
         callback && callback(null, tasks);
     });
 };
+
+showTasks.identifier = 'showTasks';

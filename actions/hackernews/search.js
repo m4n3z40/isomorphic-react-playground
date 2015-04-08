@@ -7,7 +7,7 @@ var HackerNewsConstants = require('../../constants/hackernews');
  * @param {Object} payload
  * @param {Function} callback
  */
-module.exports = function searchHackerNews(app, payload, callback) {
+ var searchHackerNews = module.exports = function(app, payload, callback) {
     app.emit(HackerNewsConstants.SEARCH_START, payload);
 
     app.getService('HackernewsService').search(payload, function(error, response) {
@@ -20,3 +20,5 @@ module.exports = function searchHackerNews(app, payload, callback) {
         callback && callback(null, response);
     });
 };
+
+searchHackerNews.identifier = 'searchHackerNews';
